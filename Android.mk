@@ -25,7 +25,7 @@ LOCAL_SRC_FILES := $(LOCAL_MODULE)
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
-LOCAL_PACKAGE_NAME := Updater
+LOCAL_PACKAGE_NAME := AICP_OTA_Updater
 LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_REQUIRED_MODULES := default-permissions_co.copperhead.updater.xml permissions_co.copperhead.updater.xml whitelist_co.copperhead.updater.xml
