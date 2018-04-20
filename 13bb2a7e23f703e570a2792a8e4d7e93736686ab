@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce609388_142da735",
+        "filename": "src/co/copperhead/updater/Service.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6
+      },
+      "writtenOn": "2018-04-20T21:16:45Z",
+      "side": 1,
+      "message": "Better to use ro.modversion instead",
+      "revId": "13bb2a7e23f703e570a2792a8e4d7e93736686ab",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b",
+      "unresolved": false
+    }
+  ]
+}
