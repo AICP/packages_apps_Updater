@@ -21,6 +21,7 @@ import android.os.UpdateEngine;
 import android.os.UpdateEngine.ErrorCodeConstants;
 import android.os.UpdateEngineCallback;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -35,12 +36,25 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.security.GeneralSecurityException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.CountDownLatch;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class Service extends IntentService {
-    private static final String TAG = "Service";
+
+    public static final String INTENT_UPDATE = "com.aicp.updater.update";
+    public static final String EXTRA_PROGRESS = "com.aicp.updater.progress";
+    public static final String EXTRA_INFO = "com.aicp.updater.info";
+    public static final String ACTION_INFO = "com.aicp.updater.action.info";
+    public static final String ACTION_DOWNLOAD = "com.aicp.updater.action.download";
+
+    public static final int INFO_NONE = 0;
+    public static final int INFO_DOWNLOADING = 1;
+    public static final int INFO_UP_TO_DATE = 2;
+    public static final int INFO_UPDATE_PENDING = 3;
+
+    private static final String TAG = "OTAService";
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID_OLD = "updates";
     private static final String NOTIFICATION_CHANNEL_ID = "updates2";
@@ -58,7 +72,13 @@ public class Service extends IntentService {
 
     final String MOD_VERSION = SystemProperties.get("ro.aicp.version.update", "unknown");
 
-    private boolean mUpdating = false;
+    private static final int STATUS_NONE = 0;
+    private static final int STATUS_UPDATING = 1;
+    private static final int STATUS_ABORT_PENDING = 2;
+    private static final int STATUS_UPDATE_PENDING = 3;
+    private static AtomicInteger mUpdatingStatus = new AtomicInteger(STATUS_NONE);
+    private static long mDownloaded = 0;
+    private static int mUpdateInfo = INFO_NONE;
 
     public Service() {
         super(TAG);
@@ -101,7 +121,7 @@ public class Service extends IntentService {
                     annoyUser();
                 } else {
                     Log.d(TAG, "onPayloadApplicationComplete: " + errorCode);
-                    mUpdating = false;
+                    mUpdatingStatus.set(STATUS_NONE);
                 }
                 UPDATE_PATH.delete();
                 monitor.countDown();
@@ -253,13 +273,20 @@ public class Service extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         Log.d(TAG, "onHandleIntent");
 
+        if (ACTION_INFO.equals(intent.getAction())) {
+            publishProgress();
+            return;
+        }
+        boolean startDownload = true;//TODO ACTION_DOWNLOAD.equals(intent.getAction());
+
         final PowerManager pm = getSystemService(PowerManager.class);
         final WakeLock wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
         try {
             wakeLock.acquire();
 
-            if (mUpdating) {
-                Log.d(TAG, "updating already, returning early");
+            if (!mUpdatingStatus.compareAndSet(STATUS_UPDATE_PENDING, STATUS_UPDATING)) {
+                Log.d(TAG, "updating not allowed, status is " + mUpdatingStatus.get() +
+                        ", returning early");
                 return;
             }
             final SharedPreferences preferences = Settings.getPreferences(this);
@@ -267,7 +294,6 @@ public class Service extends IntentService {
                 Log.d(TAG, "updated already, waiting for reboot");
                 return;
             }
-            mUpdating = true;
 
             final String channel = SystemProperties.get("sys.update.channel",
                 preferences.getString(PREFERENCE_CHANNEL, "WEEKLY"));
@@ -287,20 +313,28 @@ public class Service extends IntentService {
             final long sourceBuildDate = SystemProperties.getLong("ro.build.date.utc", 0);
             if (targetBuildDate <= sourceBuildDate) {
                 Log.d(TAG, "targetBuildDate: " + targetBuildDate + " not higher than sourceBuildDate: " + sourceBuildDate);
-                mUpdating = false;
+                mUpdateInfo = INFO_UP_TO_DATE;
+                publishProgress();
+                return;
+            }
+
+            if (!startDownload /*||!setting TODO*/) {
+                // TODO annoy user: update availabe! download?
                 return;
             }
 
             String downloadFile = preferences.getString(PREFERENCE_DOWNLOAD_FILE, null);
-            long downloaded = UPDATE_PATH.length();
+            mDownloaded = UPDATE_PATH.length();
+            mUpdateInfo = INFO_DOWNLOADING;
+            publishProgress();
 
             final String incrementalUpdate = "aicp_" + AICP_DEVICE + "-incremental-" + INCREMENTAL + "-" + targetIncremental + ".zip";
             final String fullUpdate = "aicp_" + AICP_DEVICE + "_" + MOD_VERSION + "-" + channel + "-" + targetIncremental + ".zip";
 
             if (incrementalUpdate.equals(downloadFile) || fullUpdate.equals(downloadFile)) {
-                Log.d(TAG, "resume fetch of " + downloadFile + " from " + downloaded + " bytes");
+                Log.d(TAG, "resume fetch of " + downloadFile + " from " + mDownloaded + " bytes");
                 final HttpURLConnection connection = (HttpURLConnection) fetchROM("device" + "/" + AICP_DEVICE + "/" +  channel + "/" + downloadFile);
-                connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
+                connection.setRequestProperty("Range", "bytes=" + mDownloaded + "-");
                 if (connection.getResponseCode() == HTTP_RANGE_NOT_SATISFIABLE) {
                     Log.d(TAG, "download completed previously");
                     onDownloadFinished(targetBuildDate, channel);
@@ -317,11 +351,11 @@ public class Service extends IntentService {
                     downloadFile = fullUpdate;
                     input = fetchROM("device" + "/" + AICP_DEVICE + "/" +  channel + "/" + downloadFile).getInputStream();
                 }
-                downloaded = 0;
+                mDownloaded = 0;
                 Files.deleteIfExists(UPDATE_PATH.toPath());
             }
 
-            final OutputStream output = new FileOutputStream(UPDATE_PATH, downloaded != 0);
+            final OutputStream output = new FileOutputStream(UPDATE_PATH, mDownloaded != 0);
             preferences.edit().putString(PREFERENCE_DOWNLOAD_FILE, downloadFile).commit();
 
             int bytesRead;
@@ -329,11 +363,17 @@ public class Service extends IntentService {
             final byte[] buffer = new byte[8192];
             while ((bytesRead = input.read(buffer)) != -1) {
                 output.write(buffer, 0, bytesRead);
-                downloaded += bytesRead;
+                mDownloaded += bytesRead;
                 final long now = System.nanoTime();
                 if (now - last > 1000 * 1000 * 1000) {
-                    Log.d(TAG, "downloaded " + downloaded + " bytes");
+                    Log.d(TAG, "downloaded " + mDownloaded + " bytes");
                     last = now;
+                    publishProgress();
+                }
+                if (mUpdatingStatus.get() != STATUS_UPDATING) {
+                    // status is i.e. STATUS_ABORT_PENDING
+                    Log.d(TAG, "Update aborted");
+                    return;
                 }
             }
             output.close();
@@ -343,12 +383,43 @@ public class Service extends IntentService {
             onDownloadFinished(targetBuildDate, channel);
         } catch (Exception e) {
             Log.e(TAG, "failed to download and install update", e);
-            mUpdating = false;
             PeriodicJob.scheduleRetry(this);
         } finally {
+            publishProgress();
+            mUpdatingStatus.set(STATUS_NONE);
+            if (mUpdateInfo == INFO_DOWNLOADING) {
+                mUpdateInfo = INFO_UPDATE_PENDING;
+                publishProgress();
+            }
             Log.d(TAG, "release wake locks");
             wakeLock.release();
             TriggerUpdateReceiver.completeWakefulIntent(intent);
         }
+    }
+
+    private void publishProgress() {
+        Intent update = new Intent(INTENT_UPDATE);
+        update.putExtra(EXTRA_PROGRESS, mDownloaded);
+        update.putExtra(EXTRA_INFO, mUpdateInfo);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(update);
+        // TODO ongoing notification if enabled
+    }
+
+    /**
+     * Request download service to stop.
+     * @return true if ongoing update should get cancelled, false if no update active
+     */
+    public static boolean requestStop() {
+        return mUpdatingStatus.compareAndSet(STATUS_UPDATING, STATUS_ABORT_PENDING);
+    }
+
+    /**
+     * Set service ready to start.
+     * If not done, startService will be ignored. Call once to ensure only scheduling one action.
+     * @return true if preparing service to start was successful, false if not allowed
+     * (i.e. already active)
+     */
+    public static boolean allowStart() {
+        return mUpdatingStatus.compareAndSet(STATUS_NONE, STATUS_UPDATE_PENDING);
     }
 }
