@@ -17,9 +17,14 @@ public class PeriodicJob extends JobService {
     private static final long MIN_LATENCY_MILLIS = 4 * 60 * 1000;
 
     static void schedule(final Context context) {
+        final JobScheduler scheduler = context.getSystemService(JobScheduler.class);
+        if (!Settings.getAutoUpdate(context)) {
+            scheduler.cancel(JOB_ID_PERIODIC);
+            scheduler.cancel(JOB_ID_RETRY);
+            return;
+        }
         final int networkType = Settings.getNetworkType(context);
         final boolean batteryNotLow = Settings.getBatteryNotLow(context);
-        final JobScheduler scheduler = context.getSystemService(JobScheduler.class);
         final JobInfo jobInfo = scheduler.getPendingJob(JOB_ID_PERIODIC);
         if (jobInfo != null &&
                 jobInfo.getNetworkType() == networkType &&

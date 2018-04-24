@@ -20,6 +20,7 @@ import android.os.UpdateEngine;
 import android.os.UpdateEngine.ErrorCodeConstants;
 import android.os.UpdateEngineCallback;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -39,6 +40,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class Service extends IntentService {
+
+    public static final String INTENT_UPDATE = "com.aicp.updater.update";
+    public static final String EXTRA_PROGRESS = "com.aicp.updater.progress";
+
     private static final String TAG = "Service";
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID_OLD = "updates";
@@ -57,6 +62,8 @@ public class Service extends IntentService {
     private String MOD_VERSION = SystemProperties.get("ro.aicp.version.update", "unknown");
 
     private boolean mUpdating = false;
+    // -1 not downloading, positive values progress in bytes
+    private long mDownloaded = -1;
 
     public Service() {
         super(TAG);
@@ -290,15 +297,15 @@ public class Service extends IntentService {
             }
 
             String downloadFile = preferences.getString(PREFERENCE_DOWNLOAD_FILE, null);
-            long downloaded = UPDATE_PATH.length();
+            mDownloaded = UPDATE_PATH.length();
 
             final String incrementalUpdate = "aicp_" + DEVICE + "-incremental-" + INCREMENTAL + "-" + targetIncremental + ".zip";
             final String fullUpdate = "aicp_" + DEVICE + "_" + MOD_VERSION + "-" + channel + "-" + targetIncremental + ".zip";
 
             if (incrementalUpdate.equals(downloadFile) || fullUpdate.equals(downloadFile)) {
-                Log.d(TAG, "resume fetch of " + downloadFile + " from " + downloaded + " bytes");
+                Log.d(TAG, "resume fetch of " + downloadFile + " from " + mDownloaded + " bytes");
                 final HttpURLConnection connection = (HttpURLConnection) fetchROM("device" + "/" + DEVICE + "/" +  channel + "/" + downloadFile);
-                connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
+                connection.setRequestProperty("Range", "bytes=" + mDownloaded + "-");
                 if (connection.getResponseCode() == HTTP_RANGE_NOT_SATISFIABLE) {
                     Log.d(TAG, "download completed previously");
                     onDownloadFinished(targetBuildDate, channel);
@@ -315,11 +322,11 @@ public class Service extends IntentService {
                     downloadFile = fullUpdate;
                     input = fetchROM("device" + "/" + DEVICE + "/" +  channel + "/" + downloadFile).getInputStream();
                 }
-                downloaded = 0;
+                mDownloaded = 0;
                 Files.deleteIfExists(UPDATE_PATH.toPath());
             }
 
-            final OutputStream output = new FileOutputStream(UPDATE_PATH, downloaded != 0);
+            final OutputStream output = new FileOutputStream(UPDATE_PATH, mDownloaded != 0);
             preferences.edit().putString(PREFERENCE_DOWNLOAD_FILE, downloadFile).commit();
 
             int bytesRead;
@@ -327,11 +334,12 @@ public class Service extends IntentService {
             final byte[] buffer = new byte[8192];
             while ((bytesRead = input.read(buffer)) != -1) {
                 output.write(buffer, 0, bytesRead);
-                downloaded += bytesRead;
+                mDownloaded += bytesRead;
                 final long now = System.nanoTime();
                 if (now - last > 1000 * 1000 * 1000) {
-                    Log.d(TAG, "downloaded " + downloaded + " bytes");
+                    Log.d(TAG, "downloaded " + mDownloaded + " bytes");
                     last = now;
+                    publishProgress();
                 }
             }
             output.close();
@@ -344,9 +352,17 @@ public class Service extends IntentService {
             mUpdating = false;
             PeriodicJob.scheduleRetry(this);
         } finally {
+            mDownloaded = -1;
+            publishProgress();
             Log.d(TAG, "release wake locks");
             wakeLock.release();
             TriggerUpdateReceiver.completeWakefulIntent(intent);
         }
+    }
+
+    private void publishProgress() {
+        Intent update = new Intent(INTENT_UPDATE);
+        update.putExtra(EXTRA_PROGRESS, mDownloaded);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(update);
     }
 }

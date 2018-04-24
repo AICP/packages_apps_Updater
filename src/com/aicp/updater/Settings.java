@@ -2,6 +2,9 @@ package com.aicp.updater;
 
 import android.app.job.JobInfo;
 import android.content.Context;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.UserManager;
@@ -9,9 +12,11 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 
 public class Settings extends PreferenceActivity {
     private static final int DEFAULT_NETWORK_TYPE = JobInfo.NETWORK_TYPE_ANY;
+    private static final String KEY_AUTO_UPDATE = "auto_update";
     private static final String KEY_NETWORK_TYPE = "network_type";
     static final String KEY_BATTERY_NOT_LOW = "battery_not_low";
     static final String KEY_IDLE_REBOOT = "idle_reboot";
@@ -20,6 +25,10 @@ public class Settings extends PreferenceActivity {
     static SharedPreferences getPreferences(final Context context) {
         final Context deviceContext = context.createDeviceProtectedStorageContext();
         return PreferenceManager.getDefaultSharedPreferences(deviceContext);
+    }
+
+    static boolean getAutoUpdate(final Context context) {
+        return getPreferences(context).getBoolean(KEY_AUTO_UPDATE, false);
     }
 
     static int getNetworkType(final Context context) {
@@ -66,6 +75,28 @@ public class Settings extends PreferenceActivity {
             }
             return true;
         });
+
+        final Preference autoUpdate = findPreference(KEY_AUTO_UPDATE);
+        autoUpdate.setOnPreferenceChangeListener((final Preference preference, final Object newValue) -> {
+            final boolean value = (Boolean) newValue;
+            if (!value) {
+                getPreferences(this).edit().putBoolean(KEY_AUTO_UPDATE, (boolean) newValue).apply();
+                if (!getPreferences(this).getBoolean(KEY_WAITING_FOR_REBOOT, false)) {
+                    // This also cancels jobs if needed
+                    PeriodicJob.schedule(this);
+                }
+            }
+            return true;
+        });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long progress = intent.getLongExtra(Service.EXTRA_PROGRESS, -1);
+                // TODO different pref, resources, check if -1 for not downloading
+                autoUpdate.setSummary("TODO DIFFERENT PREF " + progress);
+            }
+        }, new IntentFilter(Service.INTENT_UPDATE));
     }
 
     @Override
