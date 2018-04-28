@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86f40e99_627facdb",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3
+      },
+      "writtenOn": "2018-04-28T07:34:57Z",
+      "side": 1,
+      "message": "\u003cuses-sdk android:targetSdkVersion\u003d\"27\" android:minSdkVersion\u003d\"23\"/\u003e",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 73
+      },
+      "revId": "76b600615ce40e07c3f7dac31e25ef5737747f07",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b",
+      "unresolved": false
+    }
+  ]
+}
