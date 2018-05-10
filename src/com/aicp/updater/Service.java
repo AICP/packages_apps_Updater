@@ -170,7 +170,7 @@ public class Service extends IntentService {
                 throw new GeneralSecurityException("device mismatch, is \"" + device + "\" instead of \"" + DEVICE);
             }
             if (serialno != null) {
-                if ("INCREMENTAL".equals(channel) || "WEEKLY".equals(channel)) {
+                if ("INCREMENTAL".equals(channel) || "WEEKLY".equals(channel) || "NIGHTLY".equals(channel)) {
                     throw new GeneralSecurityException("serialno constraint not permitted for channel " + channel);
                 }
                 if (!serialno.equals(Build.getSerial())) {

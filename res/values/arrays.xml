@@ -2,11 +2,13 @@
 <resources>
     <string-array name="channel_entries" translatable="false">
         <item>@string/channel_incremental</item>
+        <item>@string/channel_nightly</item>
         <item>@string/channel_weekly</item>
     </string-array>
 
     <string-array name="channel_values" translatable="false">
         <item>INCREMENTAL</item>
+        <item>NIGHTLY</item>
         <item>WEEKLY</item>
     </string-array>
 

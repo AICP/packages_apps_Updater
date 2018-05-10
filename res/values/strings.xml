@@ -11,6 +11,7 @@
     <string name="settings_title">AICP OTA settings</string>
     <string name="channel_title">Release Type</string>
     <string name="channel_incremental">Incremental</string>
+    <string name="channel_nightly">Nightly</string>
     <string name="channel_weekly">Weekly</string>
     <string name="network_type_title">Permitted networks</string>
     <string name="network_type_any">Any</string>
