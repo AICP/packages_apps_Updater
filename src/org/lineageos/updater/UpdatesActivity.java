@@ -331,6 +331,7 @@ public class UpdatesActivity extends UpdatesListActivity {
                 int backendResponseValues = pair.length;
                 if (backendResponseValues != 6) {
                     Log.e(TAG, "backend did not returned the correct amount of values");
+                    json.delete();
                     return;
                 }
                 backendDate = pair[0];
@@ -343,6 +344,7 @@ public class UpdatesActivity extends UpdatesListActivity {
                 Log.e(TAG, "could not read file: " +json);
             } catch (NullPointerException npe) {
                 Log.e(TAG,"response of backend returned a empty set");
+                json.delete();
                 return;
             }
 
@@ -364,6 +366,7 @@ public class UpdatesActivity extends UpdatesListActivity {
             jsonObj.put("response", Jarray);
         } catch (JSONException exception) {
             Log.e(TAG, "could not create JSON object");
+            json.delete();
         }
 
         if (DEBUG) Log.d(TAG, "JSON Object: " + jsonObj);
@@ -392,6 +395,7 @@ public class UpdatesActivity extends UpdatesListActivity {
             jsonNew.renameTo(json);
         } catch (IOException | JSONException e) {
             Log.e(TAG, "Could not read json", e);
+            jsonNew.delete();
 //            showSnackbar(R.string.snack_updates_check_failed, Snackbar.LENGTH_LONG);
         }
     }
