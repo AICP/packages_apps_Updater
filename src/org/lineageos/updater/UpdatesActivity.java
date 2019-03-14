@@ -428,7 +428,11 @@ public class UpdatesActivity extends UpdatesListActivity {
                 runOnUiThread(() -> {
                     Log.d(TAG, "List downloaded");
                     convertBackendResponse(jsonFileTmp);
-                    processNewJson(jsonFile, jsonFileTmp, manualRefresh);
+                    if (jsonFileTmp.exists()) {
+                        processNewJson(jsonFile, jsonFileTmp, manualRefresh);
+                    }else {
+                        Log.e(TAG, "abort update-check due backend error");
+                    }
                     refreshAnimationStop();
                 });
             }
