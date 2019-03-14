@@ -328,6 +328,11 @@ public class UpdatesActivity extends UpdatesListActivity {
                 String line = reader.readLine();
 
                 final String[] pair = line.split(" ");
+                int backendResponseValues = pair.length;
+                if (backendResponseValues != 6) {
+                    Log.e(TAG, "backend did not returned the correct amount of values");
+                    return;
+                }
                 backendDate = pair[0];
                 backendUTS = pair[1];
                 backendAICPVersion = pair[2];
