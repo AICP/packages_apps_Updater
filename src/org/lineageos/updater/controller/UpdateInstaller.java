@@ -22,7 +22,7 @@ import android.os.SystemProperties;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
-import org.lineageos.updater.R;
+import com.aicp.updater3.R;
 import org.lineageos.updater.misc.Constants;
 import org.lineageos.updater.misc.FileUtils;
 import org.lineageos.updater.misc.Utils;

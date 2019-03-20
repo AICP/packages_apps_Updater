@@ -52,6 +52,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.aicp.updater3.R;
+
 import org.json.JSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,7 +68,7 @@ import org.lineageos.updater.misc.StringGenerator;
 import org.lineageos.updater.misc.Utils;
 import org.lineageos.updater.model.Update;
 import org.lineageos.updater.model.UpdateInfo;
-import org.lineageos.updater.R;
+import com.aicp.updater3.R;
 import org.lineageos.updater.model.UpdateStatus;
 
 import java.io.BufferedReader;
