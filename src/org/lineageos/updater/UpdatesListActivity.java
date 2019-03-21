@@ -15,8 +15,8 @@
  */
 package org.lineageos.updater;
 
-import android.support.v7.app.AppCompatActivity;
+import com.aicp.updater3.BaseAppCompatNoActionBarActivity;
 
-public abstract class UpdatesListActivity extends AppCompatActivity {
+public abstract class UpdatesListActivity extends BaseAppCompatNoActionBarActivity {
     public abstract void showSnackbar(int stringId, int duration);
 }
