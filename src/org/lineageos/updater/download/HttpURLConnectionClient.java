@@ -116,8 +116,8 @@ public class HttpURLConnectionClient implements DownloadClient {
         mDownloadThread.start();
     }
 
-    private static boolean isSuccessCode(int statusCode) {
-        return (statusCode / 100) == 2;
+    private static boolean isFailureCode(int statusCode) {
+        return (statusCode / 100) != 2;
     }
 
     private static boolean isRedirectCode(int statusCode) {
@@ -226,7 +226,7 @@ public class HttpURLConnectionClient implements DownloadClient {
                     changeClientUrl(url);
                     mClient.setConnectTimeout(5000);
                     mClient.connect();
-                    if (!isSuccessCode(mClient.getResponseCode())) {
+                    if (isFailureCode(mClient.getResponseCode())) {
                         throw new IOException("Server replied with " + mClient.getResponseCode());
                     }
                     return;
@@ -260,7 +260,7 @@ public class HttpURLConnectionClient implements DownloadClient {
                 if (mResume && isPartialContentCode(responseCode)) {
                     mTotalBytesRead = mDestination.length();
                     Log.d(TAG, "The server fulfilled the partial content request");
-                } else if (mResume || !isSuccessCode(responseCode)) {
+                } else if (mResume || isFailureCode(responseCode)) {
                     Log.e(TAG, "The server replied with code " + responseCode);
                     mCallback.onFailure(isInterrupted());
                     return;
