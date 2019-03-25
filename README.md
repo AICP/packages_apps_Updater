@@ -1,13 +1,13 @@
 Updater
 =======
-Simple application to download and apply OTA packages.
+Simple application to download and apply OTA packages.  
+Forked from LineageOS and adapted to our needs.
 
 
 Server requirements
 -------------------
-The app sends `GET` requests to the URL defined by the `updater_server_url`
-resource (or the `lineage.updater.uri` system property) and expects as response
-a JSON with the following structure:
+The app sends `GET` requests to the URL defined by the `updater_server_url`  
+resource and expects as response a JSON with the following structure:
 ```json
 {
   "response": [
@@ -18,7 +18,7 @@ a JSON with the following structure:
       "romtype": "nightly",
       "size": 314572800,
       "url": "https://example.com/ota-package.zip",
-      "version": "15.1"
+      "version": "14.0"
     }
   ]
 }
@@ -27,10 +27,10 @@ a JSON with the following structure:
 The `datetime` attribute is the build date expressed as UNIX timestamp.  
 The `filename` attribute is the name of the file to be downloaded.  
 The `id` attribute is a string that uniquely identifies the update.  
-The `romtype` attribute is the string to be compared with the `ro.lineage.releasetype` property.  
+The `romtype` attribute is the string to be compared with the `ro.aicp.buildtype` property.  
 The `size` attribute is the size of the update expressed in bytes.  
 The `url` attribute is the URL of the file to be downloaded.  
-The `version` attribute is the string to be compared with the `ro.lineage.build.version` property.  
+The `version` attribute is the string to be compared with the `ro.aicp.version` property.  
 
 Additional attributes are ignored.
 
