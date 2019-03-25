@@ -24,7 +24,7 @@
 
     <!-- Directory where the downloads will be exported to.
          The path is relative to the root of the external storage.-->
-    <string name="export_path" translatable="false">AICP updates/</string>
+    <string name="export_path" translatable="false">AICP_updates/</string>
 
     <!--
         Optional placeholders replaced at runtime:
@@ -95,7 +95,7 @@
     <string name="list_download_progress_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> of <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> • <xliff:g id="percentage" example="56">%3$s</xliff:g></string>
     <string name="list_download_progress_eta_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> of <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> (<xliff:g id="eta" example="3 minutes left">%3$s</xliff:g>) • <xliff:g id="percentage" example="56">%4$s</xliff:g></string>
     <string name="list_verifying_update">Verifying update</string>
-    <string name="list_no_updates">No new updates found. To manually check for new updates, use the Refresh button.</string>
+    <string name="list_no_updates">No new updates found. To manually check for new updates, use the Refresh button (circled arrow).</string>
 
     <string name="action_download">Download</string>
     <string name="action_pause">Pause</string>
@@ -141,8 +141,8 @@
     <string name="menu_mobile_data_warning">Mobile data warning</string>
 
     <string name="blocked_update_dialog_title">Update blocked</string>
-    <string name="blocked_update_dialog_message">This update cannot be installed using the updater app.  Please read <xliff:g id="info_url">%1$s</xliff:g> for more information.</string>
-    <string name="blocked_update_info_url" translatable="false">http://wiki.lineageos.org/upgrading.html</string>
+    <string name="blocked_update_dialog_message">This update cannot be installed using the updater app.  <xliff:g id="info_txt" translatable="false">%1$s</xliff:g></string>
+    <string name="blocked_update_info_txt">Please read the Opening Post in your device\'s XDA thread for further information.</string>
 
     <string name="export_channel_title">Export completion</string>
     <string name="new_updates_channel_title">New updates</string>
