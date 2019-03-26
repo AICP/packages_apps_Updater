@@ -1,3 +1,5 @@
+ifneq ($(NO_AUTO_UPDATER), true)
+
 LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -47,3 +49,5 @@ $(LOCAL_BUILT_MODULE): copy_updater_system_deps
 	$(hide) echo "Fake: $@"
 	$(hide) mkdir -p $(dir $@)
 	$(hide) touch $@
+
+endif
