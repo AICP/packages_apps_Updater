@@ -40,6 +40,7 @@ import org.lineageos.updater.controller.UpdaterService;
 import org.lineageos.updater.model.UpdateBaseInfo;
 import org.lineageos.updater.model.Update;
 import org.lineageos.updater.model.UpdateInfo;
+import org.lineageos.updater.model.UpdateStatus;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -115,11 +116,11 @@ public class Utils {
         return true;
     }
 
-    public static boolean canInstall(UpdateBaseInfo update) {
+    public static boolean canInstall(UpdateInfo update) {
         return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
                 update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) &&
-                update.getVersion().equalsIgnoreCase(
-                        SystemProperties.get(Constants.PROP_BUILD_VERSION));
+               (update.getPersistentStatus() == UpdateStatus.Persistent.VERIFIED ? true : update.getVersion().equalsIgnoreCase(
+                        SystemProperties.get(Constants.PROP_BUILD_VERSION)));
     }
 
     public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly)
