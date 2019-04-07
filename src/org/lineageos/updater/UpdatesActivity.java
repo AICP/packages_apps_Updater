@@ -578,7 +578,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         localUpdate.setFile(file);
         localUpdate.setName(file.getName());
         localUpdate.setFileSize(file.length());
-        localUpdate.setTimestamp(new Date().getTime()/1000L);
+        localUpdate.setTimestamp(file.lastModified()/1000L);
         localUpdate.setDownloadId(String.valueOf(new Date().getTime()/1000L));
         localUpdate.setVersion("");
         localUpdate.setPersistentStatus(UpdateStatus.Persistent.LOCAL);
