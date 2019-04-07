@@ -257,9 +257,11 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             case UpdateStatus.Persistent.VERIFIED:
                 activeLayout = update.getStatus() == UpdateStatus.INSTALLING;
                 break;
-            case UpdateStatus.Persistent.LOCAL:
             case UpdateStatus.Persistent.INCOMPLETE:
                 activeLayout = true;
+                break;
+            case UpdateStatus.Persistent.LOCAL:
+                activeLayout = false;
                 break;
             default:
                 throw new RuntimeException("Unknown update status");

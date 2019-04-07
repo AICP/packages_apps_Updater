@@ -261,7 +261,7 @@ public class UpdaterController {
     private boolean verifyPackage(File file) {
         try {
             android.os.RecoverySystem.verifyPackage(file, null, null);
-            Log.e(TAG, "Verification successful");
+            Log.i(TAG, "Verification successful");
             return true;
         } catch (Exception e) {
             Log.e(TAG, "Verification failed", e);
