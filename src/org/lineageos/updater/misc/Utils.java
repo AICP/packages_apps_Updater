@@ -117,10 +117,17 @@ public class Utils {
     }
 
     public static boolean canInstall(UpdateInfo update) {
+
+        final String[] split = update.getName().split("-");
+        if (split.length != 4) {
+            Log.e(TAG, "Improperly named file. Cannot determine version.");
+            return false;
+        }
+        final boolean updateVersionChecked = split[1].equals(SystemProperties.get(Constants.PROP_BUILD_VERSION));
+        final boolean updateBuildTypeChecked = split[2].equalsIgnoreCase(SystemProperties.get(Constants.PROP_RELEASE_TYPE));
         return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
                 update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) &&
-               (update.getPersistentStatus() == UpdateStatus.Persistent.VERIFIED ? true : update.getVersion().equalsIgnoreCase(
-                        SystemProperties.get(Constants.PROP_BUILD_VERSION)));
+                updateVersionChecked && updateBuildTypeChecked;
     }
 
     public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly)
