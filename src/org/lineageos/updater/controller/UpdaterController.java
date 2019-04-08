@@ -457,6 +457,20 @@ public class UpdaterController {
         }).start();
     }
 
+    public boolean removeUpdate(String downloadId) {
+        Log.d(TAG, "Removing " + downloadId);
+        if (!mDownloads.containsKey(downloadId) || isDownloading(downloadId)) {
+            return false;
+        }
+        Update update = mDownloads.get(downloadId).mUpdate;
+        update.setStatus(UpdateStatus.REMOVED);
+        update.setProgress(0);
+        update.setPersistentStatus(UpdateStatus.Persistent.UNKNOWN);
+        mDownloads.remove(downloadId);
+        notifyUpdateDelete(downloadId);
+        return true;
+    }
+
     public boolean deleteUpdate(String downloadId) {
         Log.d(TAG, "Cancelling " + downloadId);
         if (!mDownloads.containsKey(downloadId) || isDownloading(downloadId)) {
