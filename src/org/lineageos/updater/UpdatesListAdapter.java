@@ -443,6 +443,17 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 .setNegativeButton(android.R.string.cancel, null);
     }
 
+    private AlertDialog.Builder getRemoveDialog(final String downloadId) {
+        return new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.confirm_remove_dialog_title)
+                .setMessage(R.string.confirm_remove_dialog_message)
+                .setPositiveButton(android.R.string.ok,
+                        (dialog, which) -> {
+                            mUpdaterController.removeUpdate(downloadId);
+                        })
+                .setNegativeButton(android.R.string.cancel, null);
+    }
+
     private View.OnLongClickListener getLongClickListener(final UpdateInfo update,
             final boolean canDelete, View anchor) {
         return view -> {
@@ -513,6 +524,8 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         MenuBuilder menu = (MenuBuilder) popupMenu.getMenu();
         menu.findItem(R.id.menu_show_changelog).setVisible(update.getAvailableOnline());
         menu.findItem(R.id.menu_delete_action).setVisible(canDelete);
+        menu.findItem(R.id.menu_remove_action).setVisible(
+                update.getPersistentStatus() == UpdateStatus.Persistent.VERIFIED);
         menu.findItem(R.id.menu_copy_url).setVisible(update.getAvailableOnline());
         menu.findItem(R.id.menu_export_update).setVisible(
                 update.getPersistentStatus() == UpdateStatus.Persistent.VERIFIED);
@@ -526,6 +539,9 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                     return true;
                 case R.id.menu_delete_action:
                     getDeleteDialog(update.getDownloadId()).show();
+                    return true;
+                case R.id.menu_remove_action:
+                    getRemoveDialog(update.getDownloadId()).show();
                     return true;
                 case R.id.menu_copy_url:
                     Utils.addToClipboard(mActivity,
