@@ -468,10 +468,12 @@ public class UpdaterService extends Service {
         String percent = NumberFormat.getPercentInstance().format(progress / 100.f);
         mNotificationStyle.setSummaryText(percent);
         boolean notAB = UpdateInstaller.isInstalling();
-        mNotificationStyle.bigText(notAB ? getString(R.string.dialog_prepare_zip_message) :
+        final String notifText = notAB ? getString(R.string.dialog_prepare_zip_message) :
                 update.getFinalizing() ?
                         getString(R.string.finalizing_package) :
-                        getString(R.string.preparing_ota_first_boot));
+                        getString(R.string.preparing_ota_first_boot);
+        mNotificationStyle.bigText(notifText);
+        mNotificationBuilder.setContentText(notifText);
         mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
     }
 
