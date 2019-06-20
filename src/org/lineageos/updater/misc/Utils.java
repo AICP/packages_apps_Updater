@@ -100,7 +100,7 @@ public class Utils {
     }
 
     public static boolean isCompatible(UpdateBaseInfo update) {
-        if (update.getVersion().compareTo(SystemProperties.get(Constants.PROP_BUILD_VERSION)) < 0) {
+        if (!update.getVersion().equals(SystemProperties.get(Constants.PROP_BUILD_VERSION))) {
             Log.d(TAG, update.getName() + " is older than current Android version");
             return false;
         }
@@ -123,7 +123,7 @@ public class Utils {
             Log.e(TAG, "Improperly named file. Cannot determine version.");
             return false;
         }
-        final boolean updateVersionChecked = split[1].equals(SystemProperties.get(Constants.PROP_BUILD_VERSION));
+        final boolean updateVersionChecked = split[1].equals(SystemProperties.get(Constants.PROP_BUILD_VERSION).replaceAll("[^\\d.]", ""));
         final boolean updateBuildTypeChecked = split[2].equalsIgnoreCase(SystemProperties.get(Constants.PROP_RELEASE_TYPE));
         return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
                 update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) &&
