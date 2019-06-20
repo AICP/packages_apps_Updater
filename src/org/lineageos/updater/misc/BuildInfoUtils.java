@@ -27,6 +27,6 @@ public final class BuildInfoUtils {
     }
 
     public static String getBuildVersion() {
-        return SystemProperties.get(Constants.PROP_BUILD_VERSION);
+        return SystemProperties.get(Constants.PROP_BUILD_VERSION).replaceAll("[^\\d.]", "");
     }
 }

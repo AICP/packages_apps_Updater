@@ -76,7 +76,7 @@ public class UpdateBase implements UpdateBaseInfo {
 
     @Override
     public String getVersion() {
-        return mVersion;
+        return mVersion.replaceAll("[^\\d.]", "");
     }
 
     public void setVersion(String version) {
