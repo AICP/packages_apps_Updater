@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00efc623_9d093a57",
+        "filename": "src/org/lineageos/updater/misc/Utils.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 6
+      },
+      "writtenOn": "2019-06-21T07:58:27Z",
+      "side": 1,
+      "message": "maybe the string can be changed to\n\" is NOT compatible with current Android version\"",
+      "revId": "606e3b75ccad5cb647914cfb951dbbf4e2e345f9",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b",
+      "unresolved": true
+    }
+  ]
+}
