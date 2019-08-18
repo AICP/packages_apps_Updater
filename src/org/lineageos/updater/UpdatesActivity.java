@@ -32,7 +32,7 @@ import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,7 +65,6 @@ import org.lineageos.updater.misc.StringGenerator;
 import org.lineageos.updater.misc.Utils;
 import org.lineageos.updater.model.Update;
 import org.lineageos.updater.model.UpdateInfo;
-import com.aicp.updater3.R;
 import org.lineageos.updater.model.UpdateStatus;
 
 import java.io.File;
