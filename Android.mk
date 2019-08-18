@@ -11,13 +11,15 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_USE_AAPT2 := true
 
 LOCAL_STATIC_ANDROID_LIBRARIES := \
-    android-support-design \
-    android-support-transition \
-    android-support-v4 \
-    android-support-v7-appcompat \
-    android-support-v7-cardview \
-    android-support-v7-preference \
-    android-support-v7-recyclerview
+    androidx.core_core \
+    androidx.preference_preference \
+    androidx.annotation_annotation \
+    androidx.appcompat_appcompat \
+    androidx.cardview_cardview \
+    androidx.palette_palette \
+    androidx.recyclerview_recyclerview \
+    androidx.transition_transition \
+    com.google.android.material_material
 
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/res
