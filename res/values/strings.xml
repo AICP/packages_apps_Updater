@@ -154,4 +154,8 @@
     <string name="new_updates_channel_title">New updates</string>
     <string name="ongoing_channel_title">Ongoing downloads</string>
     <string name="update_failed_channel_title">Update failed</string>
+
+    <string name="dialog_permissions_title">Permissions</string>
+    <string name="dialog_permissions_dismiss">Dismiss</string>
+    <string name="dialog_permissions_ask">Ask again</string>
 </resources>
