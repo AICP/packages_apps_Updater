@@ -54,7 +54,7 @@
     <string name="menu_copy_url">Копировать URL</string>
     <string name="menu_export_update">Экспорт обновления</string>
     <string name="menu_show_changelog">Показать изменения</string>
-    <string name="menu_local_update">Выбрать файл...</string>
+    <string name="menu_local_update">Локальное обновление</string>
     <string name="menu_ab_perf_mode">Приоритет процесса обновления</string>
     <string name="snack_updates_found">Доступны новые обновления</string>
     <string name="snack_no_updates_found">Обновлений не найдено</string>
@@ -122,11 +122,6 @@
     <string name="new_updates_channel_title">Новые обновления</string>
     <string name="ongoing_channel_title">Текущие загрузки</string>
     <string name="update_failed_channel_title">Сбой обновления</string>
-    <string name="menu_local_update">Локальное обновление</string>
-    <string name="menu_auto_updates_check_interval_daily">Раз в день</string>
-    <string name="menu_auto_updates_check_interval_weekly">Раз в неделю</string>
-    <string name="menu_auto_updates_check_interval_monthly">Раз в месяц</string>
-    <string name="menu_auto_updates_check_interval_never">Никогда</string>
 
     <string name="dialog_permissions_title">Разрешения</string>
     <string name="dialog_permissions_dismiss">Отклонить</string>

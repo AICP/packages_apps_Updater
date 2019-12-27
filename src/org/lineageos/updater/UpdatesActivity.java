@@ -502,7 +502,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         Intent intent;
         chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         chooseFile.setType("application/zip");
-        Intent intent = Intent.createChooser(chooseFile, "Choose a file");
+        intent = Intent.createChooser(chooseFile, "Choose a file");
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
