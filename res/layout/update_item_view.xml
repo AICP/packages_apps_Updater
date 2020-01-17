@@ -27,6 +27,7 @@
                 android:id="@+id/build_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@*android:string/config_bodyFontFamily"
                 android:alpha="0.87"
                 android:drawablePadding="8dp"
                 android:maxLines="1"
@@ -39,6 +40,7 @@
                 android:id="@+id/build_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@*android:string/config_bodyFontFamily"
                 android:maxLines="1"
                 android:textSize="14sp"
                 tools:text="29 February 2018" />
@@ -61,6 +63,7 @@
                     android:id="@+id/progress_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@*android:string/config_bodyFontFamily"
                     android:layout_below="@id/progress_bar"
                     android:ellipsize="marquee"
                     android:singleLine="true"
@@ -72,6 +75,7 @@
                     android:id="@+id/build_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@*android:string/config_bodyFontFamily"
                     android:paddingTop="8sp"
                     android:singleLine="true"
                     tools:text="300 MB"
@@ -84,6 +88,7 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@*android:string/config_bodyFontFamily"
             android:padding="8dp"
             tools:text="Pause" />
     </LinearLayout>
