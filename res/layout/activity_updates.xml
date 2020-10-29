@@ -67,6 +67,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@*android:string/config_bodyFontFamily"
                     android:layout_below="@id/header_build_date"
+                    android:layout_marginTop="8dp"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp" />
             </RelativeLayout>
