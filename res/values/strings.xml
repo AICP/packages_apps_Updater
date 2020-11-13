@@ -79,7 +79,7 @@
     <string name="menu_local_update">Choose file ...</string>
 
     <string name="menu_update_recovery">Update recovery</string>
-    <string name="toast_forced_update_recovery">You cannot disable the update of Lineage Recovery on this device.</string>
+    <string name="toast_forced_update_recovery">It is impossible to disable Lineage Recovery updates on this device.</string>
 
     <string name="snack_updates_found">New updates found</string>
     <string name="snack_no_updates_found">No new updates found</string>
