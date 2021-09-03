@@ -2,4 +2,7 @@
 <resources>
     <color name="accent_dark">@*android:color/accent_device_default_dark</color>
     <color name="accent_light">@*android:color/accent_device_default_light</color>
+    <color name="tv_background">#FF0E0E0F</color>
+    <color name="tv_card_background">#222222</color>
+
 </resources>
