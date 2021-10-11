@@ -52,7 +52,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="org.lineageos.updater.UpdatesCheckReceiver">
+        <receiver android:name="org.lineageos.updater.UpdatesCheckReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
