@@ -126,10 +126,10 @@ public class UpdaterService extends Service {
                     if (extras != null && downloadId.equals(
                             extras.getString(UpdaterController.EXTRA_DOWNLOAD_ID))) {
                         mNotificationBuilder.setExtras(null);
-                        UpdateInfo update = mUpdaterController.getUpdate(downloadId);
-                        if (update.getStatus() != UpdateStatus.INSTALLED) {
-                            mNotificationManager.cancel(NOTIFICATION_ID);
-                        }
+                        stopForeground(STOP_FOREGROUND_DETACH);
+                        mNotificationBuilder.setOngoing(false);
+                        mNotificationManager.cancel(NOTIFICATION_ID);
+                        tryStopSelf();
                     }
                 }
             }
