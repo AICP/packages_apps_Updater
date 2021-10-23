@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b00eb668_f3a5eca5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1416
+      },
+      "writtenOn": "2021-10-23T18:49:01Z",
+      "side": 1,
+      "message": "Restore to PS5, it the most appropriate\n",
+      "revId": "8551dcd3e63b14127f988acfb4fea304b6067cb0",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
+    }
+  ]
+}
