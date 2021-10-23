@@ -16,6 +16,24 @@
       "message": "PS3:-\n  Move the permisssion allowlist to /system_ext, else devices with dedicated partition will fail to boot",
       "revId": "b76d75239e9978694ce21f71c65f676f5795847f",
       "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5f04849_8fd05fea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6
+      },
+      "writtenOn": "2021-10-23T17:14:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4e8a37eb_66793bb9",
+      "revId": "b76d75239e9978694ce21f71c65f676f5795847f",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
     }
   ]
 }
