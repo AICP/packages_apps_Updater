@@ -54,6 +54,8 @@
     <string name="menu_export_update">Eksportuj aktualizację</string>
     <string name="menu_show_changelog">Pokaż listę zmian</string>
     <string name="menu_local_update">Wybierz plik ...</string>
+    <string name="menu_update_recovery">Aktualizacja Recovery</string>
+    <string name="toast_forced_update_recovery">Nie można wyłączyć aktualizacji Recovery na tym urządzeniu.</string>
     <string name="snack_updates_found">Znaleziono aktualizację systemu</string>
     <string name="snack_no_updates_found">Nie znaleziono nowych aktualizacji</string>
     <string name="snack_updates_check_failed">Nie udało się wyszukać aktualizacji. Proszę sprawdzić połączenie internetowe i spróbować ponownie.</string>
