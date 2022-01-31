@@ -2,13 +2,13 @@ import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
