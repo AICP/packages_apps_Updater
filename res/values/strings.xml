@@ -160,4 +160,7 @@
     <string name="dialog_permissions_title">Permissions</string>
     <string name="dialog_permissions_dismiss">Dismiss</string>
     <string name="dialog_permissions_ask">Ask again</string>
+    <string name="info_dialog_title">Did you know?</string>
+    <string name="info_dialog_message">LineageOS updates are full installation packages. That means you can always install only the latest update, even if you skipped some in between!</string>
+    <string name="info_dialog_ok">Thanks for the info!</string>
 </resources>
