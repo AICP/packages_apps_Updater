@@ -5,4 +5,12 @@
     <color name="tv_background">#FF0E0E0F</color>
     <color name="tv_card_background">#222222</color>
 
+    <color name="theme_primary">#ff212121</color>
+    <color name="theme_primary_dark">#ff000000</color>
+    <color name="theme_accent">#ff009688</color>
+
+    <color name="white">#f5f5f5</color>
+    <color name="inverted">#212121</color>
+    <color name="ic_background">#333333</color>
+
 </resources>
