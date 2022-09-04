@@ -119,4 +119,7 @@
     <string name="dialog_permissions_title">İzinler</string>
     <string name="dialog_permissions_dismiss">Reddet</string>
     <string name="dialog_permissions_ask">Tekrar sor</string>
+    <string name="info_dialog_title">Biliyor musun?</string>
+    <string name="info_dialog_message">AICP güncellemeleri tam yükleme paketleridir. Bu demektir ki güncelleme atlamış olsanız bile her zaman sadece son güncellemeyi kurabilirsiniz!</string>
+    <string name="info_dialog_ok">Bilgi için teşekkürler!</string>
 </resources>

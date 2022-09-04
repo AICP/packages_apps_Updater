@@ -119,4 +119,7 @@
     <string name="dialog_permissions_title">Permisos</string>
     <string name="dialog_permissions_dismiss">Descartar</string>
     <string name="dialog_permissions_ask">Preguntar de nuevo</string>
+    <string name="info_dialog_title">¿Sabías que?</string>
+    <string name="info_dialog_message">Las actualizaciones de AICP son paquetes de instalación completos. Esto significa que solo puede instalar la última versión de la actualización, incluso si se ha saltado alguna versión!</string>
+    <string name="info_dialog_ok">¡Gracias por la información!</string>
 </resources>

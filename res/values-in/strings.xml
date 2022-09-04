@@ -116,4 +116,7 @@
     <string name="dialog_permissions_title">Izin</string>
     <string name="dialog_permissions_dismiss">Abaikan</string>
     <string name="dialog_permissions_ask">Tanya lagi</string>
+    <string name="info_dialog_title">Tahukah Anda?</string>
+    <string name="info_dialog_message">Pembaruan AICP adalah paket instalasi lengkap. Itu berarti Anda selalu dapat menginstal hanya pembaruan terbaru, bahkan jika Anda melewatkan beberapa di antaranya!</string>
+    <string name="info_dialog_ok">Terima kasih atas infonya!</string>
 </resources>

@@ -54,6 +54,8 @@
     <string name="menu_export_update">匯出更新</string>
     <string name="menu_show_changelog">顯示更新記錄</string>
     <string name="menu_local_update">選擇檔案⋯</string>
+    <string name="menu_update_recovery">更新 Recovery</string>
+    <string name="toast_forced_update_recovery">無法停用此裝置上的 Recovery 更新。</string>
     <string name="snack_updates_found">發現新的更新</string>
     <string name="snack_no_updates_found">沒有找到新的更新</string>
     <string name="snack_updates_check_failed">更新檢查失敗。請檢查您的網際網路連線並於稍後重試。</string>
@@ -114,4 +116,7 @@
     <string name="dialog_permissions_title">權限</string>
     <string name="dialog_permissions_dismiss">取消</string>
     <string name="dialog_permissions_ask">下次詢問我</string>
+    <string name="info_dialog_title">您知道嗎？</string>
+    <string name="info_dialog_message">AICP 的更新為完整的安裝包。 您可以在跳過中間一些更新的情況下，直接安裝最新的版本。</string>
+    <string name="info_dialog_ok">感謝您的反饋！</string>
 </resources>
