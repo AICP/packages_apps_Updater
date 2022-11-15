@@ -16,6 +16,23 @@
       "message": "I think we need similar one for Jelly too",
       "revId": "74c3bffb387491e0b0008e5c673cd5a037c29f6f",
       "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "386c824c_7ea25bbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3
+      },
+      "writtenOn": "2022-11-15T08:24:17Z",
+      "side": 1,
+      "message": "https://review.lineageos.org/c/LineageOS/android_packages_apps_Updater/+/343557 merged",
+      "revId": "74c3bffb387491e0b0008e5c673cd5a037c29f6f",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
     }
   ]
 }
