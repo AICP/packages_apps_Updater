@@ -21,9 +21,9 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 

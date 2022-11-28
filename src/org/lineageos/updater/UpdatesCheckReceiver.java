@@ -24,11 +24,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.aicp.updater3.R;
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.lineageos.updater.download.DownloadClient;

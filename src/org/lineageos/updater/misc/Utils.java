@@ -27,9 +27,10 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.SystemProperties;
 import android.os.storage.StorageManager;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
