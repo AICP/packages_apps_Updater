@@ -2,8 +2,11 @@
 
 updates_dir=/data/lineageos_updates
 
+# $1 = ZIP
+# $2 = UNVERIFIED (optional)
+# $3 = SERIAL (optional)
 if [ ! -f "$1" ]; then
-   echo "Usage: $0 ZIP [UNVERIFIED]"
+   echo "Usage: $0 ZIP [UNVERIFIED] [SERIAL]"
    echo "Push ZIP to $updates_dir and add it to Updater"
    echo
    echo "The name of ZIP is assumed to have lineage-VERSION-DATE-TYPE-* as format"
@@ -12,19 +15,23 @@ if [ ! -f "$1" ]; then
 fi
 zip_path=`realpath "$1"`
 
-if [ "`adb get-state 2>/dev/null`" != "device" ]; then
+serial="$3"
+ADB="adb"
+[ -n "$serial" ] && ADB="adb -s $serial"
+
+if [ "`$ADB get-state 2>/dev/null`" != "device" ]; then
     echo "No device found. Waiting for one..."
-    adb wait-for-device
+    $ADB wait-for-device
 fi
-if ! adb root; then
+if ! $ADB root; then
     echo "Could not run adbd as root"
     exit 1
 fi
 
 zip_path_device=$updates_dir/`basename "$zip_path"`
-if adb shell test -f "$zip_path_device"; then
+if $ADB shell test -f "$zip_path_device"; then
     echo "$zip_path_device exists already"
-    adb unroot
+    $ADB unroot
     exit 1
 fi
 
@@ -48,15 +55,15 @@ else
     size=`stat -c "%s" "$zip_path"`
 fi
 
-adb push "$zip_path" "$zip_path_device"
-adb shell chgrp cache "$zip_path_device"
-adb shell chmod 664 "$zip_path_device"
+$ADB push "$zip_path" "$zip_path_device"
+$ADB shell chgrp cache "$zip_path_device"
+$ADB shell chmod 664 "$zip_path_device"
 
 # Kill the app before updating the database
-adb shell "killall org.lineageos.updater 2>/dev/null"
-adb shell "sqlite3 /data/data/org.lineageos.updater/databases/updates.db" \
+$ADB shell "killall org.lineageos.updater 2>/dev/null"
+$ADB shell "sqlite3 /data/data/org.lineageos.updater/databases/updates.db" \
     "\"INSERT INTO updates (status, path, download_id, timestamp, type, version, size)" \
     "  VALUES ($status, '$zip_path_device', '$id', $timestamp, '$type', '$version', $size)\""
 
 # Exit root mode
-adb unroot
+$ADB unroot
