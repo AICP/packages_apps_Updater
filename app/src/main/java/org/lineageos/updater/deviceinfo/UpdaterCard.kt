@@ -349,7 +349,7 @@ private fun InfoColumn(
 private fun UpdaterCardPreview() {
     SettingsTheme {
         UpdaterCard(
-            buildVersion = "23.2",
+            buildVersion = "21.2",
             androidVersion = "16",
             buildDate = "Feb 20",
             securityPatch = "Feb 2026",
