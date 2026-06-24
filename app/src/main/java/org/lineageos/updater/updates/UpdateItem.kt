@@ -248,7 +248,7 @@ private fun UpdateItemIdleCollapsedPreview() {
             state = UpdateItemState(
                 downloadId = "preview",
                 buildDate = "Apr 27",
-                buildVersion = "LineageOS 23.2",
+                buildVersion = "AICP 21.2",
                 status = "",
                 isLocal = false,
                 fileSize = "1.1 GB",
@@ -281,7 +281,7 @@ private fun UpdateItemIdleExpandedPreview() {
             state = UpdateItemState(
                 downloadId = "preview",
                 buildDate = "Apr 27",
-                buildVersion = "LineageOS 23.2",
+                buildVersion = "AICP 21.2",
                 status = "",
                 isLocal = false,
                 fileSize = "1.1 GB",
@@ -314,7 +314,7 @@ private fun UpdateItemDownloadingPreview() {
             state = UpdateItemState(
                 downloadId = "preview",
                 buildDate = "Apr 27",
-                buildVersion = "LineageOS 23.2",
+                buildVersion = "AICP 21.2",
                 status = "Downloading",
                 isLocal = false,
                 fileSize = "1.1 GB",
