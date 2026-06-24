@@ -4,43 +4,27 @@
  */
 package org.lineageos.updater.misc;
 
-import android.app.AlarmManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.os.SystemProperties;
 import android.os.storage.StorageManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.lineageos.updater.R;
-import org.lineageos.updater.UpdatesDbHelper;
 import org.lineageos.updater.controller.UpdaterService;
-import org.lineageos.updater.model.Update;
-import org.lineageos.updater.model.UpdateBaseInfo;
-import org.lineageos.updater.model.UpdateInfo;
+import org.lineageos.updater.data.UserPreferencesRepository;
+import org.lineageos.updater.data.Update;
+import org.lineageos.updater.data.source.local.UpdatesLocalDataSource;
+import org.lineageos.updater.data.source.local.UpdatesDatabase;
+import org.lineageos.updater.deviceinfo.DeviceInfoUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -55,42 +39,7 @@ public class Utils {
         return new File(context.getString(R.string.download_path));
     }
 
-    public static File getCachedUpdateList(Context context) {
-        return new File(context.getCacheDir(), "updates.json");
-    }
-
-    // This should really return an UpdateBaseInfo object, but currently this only
-    // used to initialize UpdateInfo objects
-    private static UpdateInfo parseJsonUpdate(JSONObject object) throws JSONException {
-        Update update = new Update();
-        update.setTimestamp(object.getLong("datetime"));
-        update.setName(object.getString("filename"));
-        update.setDownloadId(object.getString("id"));
-        update.setType(object.getString("romtype"));
-        update.setFileSize(object.getLong("size"));
-        update.setDownloadUrl(object.getString("url"));
-        update.setVersion(object.getString("version"));
-        return update;
-    }
-
-    public static boolean isCompatible(UpdateBaseInfo update) {
-        if (update.getVersion().compareTo(SystemProperties.get(Constants.PROP_BUILD_VERSION)) < 0) {
-            Log.d(TAG, update.getName() + " is older than current Android version");
-            return false;
-        }
-        if (!SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) &&
-                update.getTimestamp() <= SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) {
-            Log.d(TAG, update.getName() + " is older than/equal to the current build");
-            return false;
-        }
-        if (!update.getType().equalsIgnoreCase(SystemProperties.get(Constants.PROP_RELEASE_TYPE))) {
-            Log.d(TAG, update.getName() + " has type " + update.getType());
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean compareVersions(String a, String b, boolean allowMajorUpgrades) {
+    public static boolean compareVersions(String a, String b, boolean allowMajorUpgrades) {
         try {
             a = a.replaceAll("[^0-9.]", "");
             b = b.replaceAll("[^0-9.]", "");
@@ -104,6 +53,7 @@ public class Utils {
             int majorB = Integer.parseInt(partsB[0]);
             int minorB = partsB.length > 1 ? Integer.parseInt(partsB[1]) : 0;
 
+            // Return early and allow if we allow major version upgrades
             return (allowMajorUpgrades && majorA > majorB)
                     || (majorA == majorB && minorA >= minorB);
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
@@ -111,128 +61,11 @@ public class Utils {
         }
     }
 
-    public static boolean canInstall(UpdateBaseInfo update) {
-        boolean allowMajorUpgrades = SystemProperties.getBoolean(
-                Constants.PROP_ALLOW_MAJOR_UPGRADES, false);
-        return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
-                update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) &&
-                compareVersions(
-                        update.getVersion(),
-                        SystemProperties.get(Constants.PROP_BUILD_VERSION),
-                        allowMajorUpgrades);
-    }
-
-    public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly)
-            throws IOException, JSONException {
-        List<UpdateInfo> updates = new ArrayList<>();
-
-        StringBuilder json = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            for (String line; (line = br.readLine()) != null;) {
-                json.append(line);
-            }
-        }
-
-        JSONObject obj = new JSONObject(json.toString());
-        JSONArray updatesList = obj.getJSONArray("response");
-        for (int i = 0; i < updatesList.length(); i++) {
-            if (updatesList.isNull(i)) {
-                continue;
-            }
-            try {
-                UpdateInfo update = parseJsonUpdate(updatesList.getJSONObject(i));
-                if (!compatibleOnly || isCompatible(update)) {
-                    updates.add(update);
-                } else {
-                    Log.d(TAG, "Ignoring incompatible update " + update.getName());
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, "Could not parse update object, index=" + i, e);
-            }
-        }
-
-        return updates;
-    }
-
-    public static String getServerURL(Context context) {
-        String incrementalVersion = SystemProperties.get(Constants.PROP_BUILD_VERSION_INCREMENTAL);
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
-        String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE).toLowerCase(Locale.ROOT);
-
-        String serverUrl = SystemProperties.get(Constants.PROP_UPDATER_URI);
-        if (serverUrl.trim().isEmpty()) {
-            serverUrl = context.getString(R.string.updater_server_url);
-        }
-
-        return serverUrl.replace("{device}", device)
-                .replace("{type}", type)
-                .replace("{incr}", incrementalVersion);
-    }
-
-    public static String getUpgradeBlockedURL(Context context) {
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
-        return context.getString(R.string.blocked_update_info_url, device);
-    }
-
-    public static String getChangelogURL(Context context) {
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
-        return context.getString(R.string.menu_changelog_url, device);
-    }
-
     public static void triggerUpdate(Context context, String downloadId) {
         final Intent intent = new Intent(context, UpdaterService.class);
         intent.setAction(UpdaterService.ACTION_INSTALL_UPDATE);
         intent.putExtra(UpdaterService.EXTRA_DOWNLOAD_ID, downloadId);
         context.startService(intent);
-    }
-
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
-        Network activeNetwork = cm.getActiveNetwork();
-        NetworkCapabilities networkCapabilities = cm.getNetworkCapabilities(activeNetwork);
-        if (networkCapabilities != null &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
-            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_USB)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
-        }
-        return false;
-    }
-
-    public static boolean isNetworkMetered(Context context) {
-        ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
-        return cm.isActiveNetworkMetered();
-    }
-
-    /**
-     * Compares two json formatted updates list files
-     *
-     * @param oldJson old update list
-     * @param newJson new update list
-     * @return true if newJson has at least a compatible update not available in oldJson
-     */
-    public static boolean checkForNewUpdates(File oldJson, File newJson)
-            throws IOException, JSONException {
-        List<UpdateInfo> oldList = parseJson(oldJson, true);
-        List<UpdateInfo> newList = parseJson(newJson, true);
-        Set<String> oldIds = new HashSet<>();
-        for (UpdateInfo update : oldList) {
-            oldIds.add(update.getDownloadId());
-        }
-        // In case of no new updates, the old list should
-        // have all (if not more) the updates
-        for (UpdateInfo update : newList) {
-            if (!oldIds.contains(update.getDownloadId())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -283,17 +116,16 @@ public class Utils {
      * the data of the application are wiped.
      *
      */
-    public static void cleanupDownloadsDir(Context context) {
+    public static void cleanupDownloadsDir(Context context,
+            UserPreferencesRepository userPreferencesRepository) {
         File downloadPath = getDownloadPath(context);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        removeUncryptFiles(downloadPath);
-
-        long buildTimestamp = SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0);
+        long buildTimestamp = DeviceInfoUtils.getBuildDateTimestamp();
         long prevTimestamp = preferences.getLong(Constants.PREF_INSTALL_OLD_TIMESTAMP, 0);
         String lastUpdatePath = preferences.getString(Constants.PREF_INSTALL_PACKAGE_PATH, null);
         boolean reinstalling = preferences.getBoolean(Constants.PREF_INSTALL_AGAIN, false);
-        boolean deleteUpdates = preferences.getBoolean(Constants.PREF_AUTO_DELETE_UPDATES, false);
+        boolean deleteUpdates = userPreferencesRepository.getAutoDeleteBlocking();
         if ((buildTimestamp != prevTimestamp || reinstalling) && deleteUpdates &&
                 lastUpdatePath != null) {
             File lastUpdate = new File(lastUpdatePath);
@@ -321,8 +153,10 @@ public class Utils {
 
         // Ideally the database is empty when we get here
         List<String> knownPaths = new ArrayList<>();
-        try (UpdatesDbHelper dbHelper = new UpdatesDbHelper(context)) {
-            for (UpdateInfo update : dbHelper.getUpdates()) {
+        UpdatesLocalDataSource db =
+                new UpdatesLocalDataSource(UpdatesDatabase.getInstance(context).updateDao());
+        for (Update update : db.getUpdates()) {
+            if (update.getFile() != null) {
                 knownPaths.add(update.getFile().getAbsolutePath());
             }
         }
@@ -358,10 +192,6 @@ public class Utils {
         throw new IllegalStateException();
     }
 
-    public static boolean isABDevice() {
-        return SystemProperties.getBoolean(Constants.PROP_AB_DEVICE, false);
-    }
-
     public static boolean isABUpdate(ZipFile zipFile) {
         return zipFile.getEntry(Constants.AB_PAYLOAD_BIN_PATH) != null &&
                 zipFile.getEntry(Constants.AB_PAYLOAD_PROPERTIES_PATH) != null;
@@ -374,47 +204,8 @@ public class Utils {
         return isAB;
     }
 
-    public static boolean hasTouchscreen(Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN);
-    }
-
-    public static void addToClipboard(Context context, String label, String text,
-                                      String toastMessage) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(
-                Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(label, text);
-        clipboard.setPrimaryClip(clip);
-        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
-    }
-
     public static boolean isEncrypted(Context context, File file) {
         StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
         return sm.isEncrypted(file);
-    }
-
-    public static int getUpdateCheckSetting(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt(Constants.PREF_AUTO_UPDATES_CHECK_INTERVAL,
-                Constants.AUTO_UPDATES_CHECK_INTERVAL_WEEKLY);
-    }
-
-    public static boolean isUpdateCheckEnabled(Context context) {
-        return getUpdateCheckSetting(context) != Constants.AUTO_UPDATES_CHECK_INTERVAL_NEVER;
-    }
-
-    public static long getUpdateCheckInterval(Context context) {
-        switch (Utils.getUpdateCheckSetting(context)) {
-            case Constants.AUTO_UPDATES_CHECK_INTERVAL_DAILY:
-                return AlarmManager.INTERVAL_DAY;
-            case Constants.AUTO_UPDATES_CHECK_INTERVAL_WEEKLY:
-            default:
-                return AlarmManager.INTERVAL_DAY * 7;
-            case Constants.AUTO_UPDATES_CHECK_INTERVAL_MONTHLY:
-                return AlarmManager.INTERVAL_DAY * 30;
-        }
-    }
-
-    public static boolean isRecoveryUpdateExecPresent() {
-        return new File(Constants.UPDATE_RECOVERY_EXEC).exists();
     }
 }

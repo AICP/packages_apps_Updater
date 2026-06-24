@@ -25,6 +25,9 @@ public class HttpURLConnectionClient implements DownloadClient {
 
     private final static String TAG = "HttpURLConnectionClient";
 
+    // Ref: mozilla-mobile/firefox-android AbstractFetchDownloadService.CHUNK_SIZE
+    private static final int CHUNK_SIZE = 32 * 1024;
+
     private HttpURLConnection mClient;
 
     private final File mDestination;
@@ -122,6 +125,7 @@ public class HttpURLConnectionClient implements DownloadClient {
         private long mLastMillis = 0;
         private long mSpeed = -1;
         private long mEta = -1;
+        private double mLastEta = -1;
 
         private final boolean mResume;
 
@@ -136,6 +140,7 @@ public class HttpURLConnectionClient implements DownloadClient {
                 // ETA since the delta will grow, resulting in a very low speed
                 mLastMillis = millis;
                 mSpeed = -1; // we don't want the moving avg with values from who knows when
+                mLastEta = -1; // reset smoothed ETA so the first post-resume value is accepted as-is
 
                 // need to do this as well, otherwise the second time we call calculateSpeed(),
                 // the difference (mTotalBytesRead - mCurSampleBytes) will be larger than expected,
@@ -157,10 +162,31 @@ public class HttpURLConnectionClient implements DownloadClient {
             }
         }
 
+        // Ref: mozilla-central DownloadsCommon.sys.mjs smoothSeconds()
         private void calculateEta() {
-            if (mSpeed > 0) {
-                mEta = (mTotalBytes - mTotalBytesRead) / mSpeed;
+            if (mSpeed <= 0) return;
+
+            double rawSeconds = (double) (mTotalBytes - mTotalBytesRead) / mSpeed;
+
+            // Apply smoothing only when the new value is more than half the previous;
+            // large drops (e.g. after resume) are accepted immediately.
+            if (mLastEta >= 0 && rawSeconds > mLastEta / 2) {
+                double diff = rawSeconds - mLastEta;
+                // Asymmetric: trust 30% of a decrease, only 10% of an increase.
+                rawSeconds = mLastEta + (diff < 0 ? 0.3 : 0.1) * diff;
+
+                // If the change is tiny (< 5 s or < 5%), nudge by a small amount
+                // so the display shows forward progress rather than freezing.
+                diff = rawSeconds - mLastEta;
+                double diffPct = (diff / mLastEta) * 100;
+                if (Math.abs(diff) < 5 || Math.abs(diffPct) < 5) {
+                    rawSeconds = mLastEta - (diff < 0 ? 0.4 : 0.2);
+                }
             }
+
+            // Never show zero seconds while still downloading.
+            mLastEta = Math.max(rawSeconds, 1.0);
+            mEta = (long) mLastEta;
         }
 
         private void changeClientUrl(URL newUrl) throws IOException {
@@ -193,7 +219,7 @@ public class HttpURLConnectionClient implements DownloadClient {
 
                     // https://tools.ietf.org/html/rfc6249
                     // https://tools.ietf.org/html/rfc5988#section-5
-                    String regex = "(?i)<(.+)>\\s*;\\s*rel=duplicate(?:.*pri=([0-9]+).*|.*)?";
+                    String regex = "(?i)<([^>]+)>\\s*;\\s*rel=duplicate(?:.*pri=([0-9]+).*|.*)?";
                     Pattern pattern = Pattern.compile(regex);
                     for (String field : entry.getValue()) {
                         Matcher matcher = pattern.matcher(field);
@@ -272,7 +298,7 @@ public class HttpURLConnectionClient implements DownloadClient {
                         OutputStream outputStream = new FileOutputStream(mDestination, mResume)
                 ) {
                     mTotalBytes = mClient.getContentLengthLong() + mTotalBytesRead;
-                    byte[] b = new byte[8192];
+                    byte[] b = new byte[CHUNK_SIZE];
                     int count;
                     while (!isInterrupted() && (count = inputStream.read(b)) > 0) {
                         outputStream.write(b, 0, count);

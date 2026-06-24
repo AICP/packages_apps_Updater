@@ -4,27 +4,16 @@
  */
 
 import java.util.Properties
-import org.lineageos.generatebp.GenerateBpPlugin
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.lineageos.generatebp.GenerateBpPluginExtension
 import org.lineageos.generatebp.models.Module
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-}
-
-apply {
-    plugin<GenerateBpPlugin>()
-}
-
-buildscript {
-    repositories {
-        maven("https://raw.githubusercontent.com/lineage-next/gradle-generatebp/v1.2/.m2")
-    }
-
-    dependencies {
-        classpath("org.lineageos:gradle-generatebp:+")
-    }
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.lineageos.generatebp)
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -35,12 +24,12 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "org.lineageos.updater"
-        minSdk = 32
-        targetSdk = 33
+        minSdk = 34
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
     }
@@ -61,13 +50,20 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+    buildFeatures {
+        buildConfig = true
+        compose = true
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
 
     signingConfigs {
@@ -89,21 +85,41 @@ android {
     namespace = "org.lineageos.updater"
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     compileOnly(fileTree(mapOf("dir" to "../system_libs", "include" to listOf("*.jar"))))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
-    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
-    implementation("androidx.preference:preference:1.2.0")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation("com.google.android.material:material:1.9.0-alpha01")
+    debugImplementation(files("../system_libs/SettingsLib.jar", "../system_libs/SpaLib.jar"))
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.lottie.compose)
+
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.preference)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okhttp)
+
+    annotationProcessor(libs.androidx.room.compiler)
 }
 
 configure<GenerateBpPluginExtension> {
     targetSdk.set(android.defaultConfig.targetSdk!!)
+    minSdk.set(android.defaultConfig.minSdk!!)
+    versionCode.set(android.defaultConfig.versionCode!!)
+    versionName.set(android.defaultConfig.versionName!!)
     availableInAOSP.set { module: Module ->
         when {
             module.group.startsWith("androidx") -> true

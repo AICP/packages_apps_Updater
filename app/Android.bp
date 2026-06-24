@@ -1,16 +1,18 @@
 //
-// Copyright (C) 2022-2024 The LineageOS Project
-//
+// SPDX-FileCopyrightText: The LineageOS Project
 // SPDX-License-Identifier: Apache-2.0
 //
 
 android_app {
     name: "Updater",
 
-    // Include SettingsLib and its dependencies
-    defaults: ["SettingsLibDefaults"],
+    defaults: ["SpaPrivilegedLib-defaults"],
 
-    srcs: ["src/main/java/**/*.java"],
+    srcs: [
+        "src/main/java/**/*.java",
+        "src/main/java/**/*.kt",
+    ],
+
     resource_dirs: ["src/main/res"],
     manifest: "src/main/AndroidManifest.xml",
 
@@ -24,20 +26,66 @@ android_app {
         "SystemUpdater",
     ],
 
+    plugins: [
+        "androidx.room_room-compiler-plugin"
+    ],
+
+    javacflags: [
+        "-Aroom.schemaLocation=packages/apps/Updater/schemas"
+    ],
+
+    kotlin_plugins: [
+        "kotlin-serialize-compiler-plugin",
+    ],
+
     static_libs: [
         // DO NOT EDIT THIS SECTION MANUALLY
+        "androidx.activity_activity-compose",
+        "androidx.compose.animation_animation",
+        "androidx.compose.animation_animation-core",
+        "androidx.compose.foundation_foundation",
+        "androidx.compose.foundation_foundation-layout",
+        "androidx.compose.material_material-icons-core",
+        "androidx.compose.material_material-icons-extended",
+        "androidx.compose.material_material-ripple",
+        "androidx.compose.material3_material3",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.runtime_runtime-annotation",
+        "androidx.compose.runtime_runtime-saveable",
+        "androidx.compose.ui_ui",
+        "androidx.compose.ui_ui-geometry",
+        "androidx.compose.ui_ui-graphics",
+        "androidx.compose.ui_ui-text",
+        "androidx.compose.ui_ui-tooling-preview",
+        "androidx.compose.ui_ui-unit",
+        "androidx.compose.ui_ui-util",
         "androidx.core_core-ktx",
-        "androidx.appcompat_appcompat",
-        "androidx.cardview_cardview",
+        "androidx.datastore_datastore",
+        "androidx.datastore_datastore-core",
+        "androidx.datastore_datastore-preferences",
+        "androidx.graphics_graphics-shapes",
+        "androidx.lifecycle_lifecycle-livedata-ktx",
+        "androidx.lifecycle_lifecycle-runtime",
+        "androidx.lifecycle_lifecycle-runtime-compose",
+        "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.lifecycle_lifecycle-viewmodel-ktx",
-        "androidx.localbroadcastmanager_localbroadcastmanager",
+        "androidx.lifecycle_lifecycle-viewmodel-savedstate",
         "androidx.preference_preference",
-        "androidx.recyclerview_recyclerview",
-        "com.google.android.material_material",
+        "androidx.room_room-runtime",
+        "androidx.savedstate_savedstate",
+        "androidx.savedstate_savedstate-compose",
+        "androidx.sqlite_sqlite",
+        "androidx.sqlite_sqlite-framework",
+        "androidx.work_work-runtime-ktx",
+        "Updater_com.squareup.okhttp3_okhttp",
+        "kotlin-stdlib",
+        "kotlinx_serialization_json",
     ],
 
     optimize: {
-        proguard_flags_files: ["proguard.flags"],
+        optimize: true,
+        proguard_flags_files: ["proguard-rules.pro"],
+        shrink_resources: true,
     },
 
     required: [

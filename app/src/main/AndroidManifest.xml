@@ -18,22 +18,26 @@
     <uses-permission android:name="android.permission.RECOVERY" />
     <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
 
     <application
+        android:name=".UpdaterApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/display_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.SpaLib"
         android:usesCleartextTraffic="false">
+
+        <activity
+            android:name=".preferences.PreferencesActivity"
+            android:exported="false" />
 
         <activity
             android:name=".UpdatesActivity"
             android:excludeFromRecents="true"
-            android:label="@string/display_name"
             android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop">
             <intent-filter android:priority="2">
                 <action android:name="android.settings.SYSTEM_UPDATE_SETTINGS" />
@@ -63,12 +67,6 @@
         </service>
 
         <receiver android:name=".UpdaterReceiver" android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".UpdatesCheckReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
