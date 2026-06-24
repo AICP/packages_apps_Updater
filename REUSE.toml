@@ -3,8 +3,8 @@
 
 version = 1
 SPDX-PackageName = "Updater"
-SPDX-PackageSupplier = "The LineageOS Project"
-SPDX-PackageDownloadLocation = "https://github.com/LineageOS/android_packages_apps_Updater"
+SPDX-PackageSupplier = "AICP"
+SPDX-PackageDownloadLocation = "https://github.com/AICP/packages_apps_Updater"
 
 [[annotations]]
 path = [".gitignore", "app/.gitignore", "keystore.properties.sample"]
