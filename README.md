@@ -32,10 +32,10 @@ a JSON with the following structure:
 The `datetime` attribute is the build date expressed as UNIX timestamp.  
 The `filename` attribute is the name of the file to be downloaded.  
 The `id` attribute is a string that uniquely identifies the update.  
-The `romtype` attribute is the string to be compared with the `ro.lineage.releasetype` property.  
+The `romtype` attribute is the string to be compared with the `ro.aicp.releasetype` property.  
 The `size` attribute is the size of the update expressed in bytes.  
 The `url` attribute is the URL of the file to be downloaded.  
-The `version` attribute is the string to be compared with the `ro.lineage.build.version` property.  
+The `version` attribute is the string to be compared with the `ro.aicp.build.version` property.  
 
 Additional attributes are ignored.
 

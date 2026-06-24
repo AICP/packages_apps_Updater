@@ -49,10 +49,10 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 // Brand guide: "Mark height based on text x-height". Approximate Roboto x-height from font size.
-private const val MARK_X_HEIGHT_RATIO = 0.55f
+private const val MARK_X_HEIGHT_RATIO = 7.55f
 
 // Brand guide: "Do not warp, transform". Derive width from height to keep logo proportions.
-private const val MARK_WIDTH_MULTIPLIER = 2.5f
+private const val MARK_WIDTH_MULTIPLIER = 8.5f
 
 // Brand guide: "higher numbers' lower edges". Scale the gap from the mark, not a fixed dp.
 private const val VERSION_MARK_SPACING_RATIO = 0.10f
@@ -199,10 +199,10 @@ fun UpdaterCard(
     modifier: Modifier = Modifier,
     shape: Shape = CornerExtraLarge1,
 ) {
-    val brandColor = colorResource(R.color.brand_primary)
-    val onBrandColor = colorResource(R.color.on_brand_surface)
-    val patternColor = colorResource(R.color.brand_pattern)
-    val sheenColor = colorResource(R.color.brand_sheen)
+    val brandColor = Color(0x20ffa000)
+    val onBrandColor = Color(0x90ffab00)
+    val patternColor = Color(0x20cddc39)
+    val sheenColor = Color(0x20673ab7)
 
     val density = LocalDensity.current
     val displayLarge = MaterialTheme.typography.displayLarge
@@ -248,7 +248,7 @@ fun UpdaterCard(
                         .padding(SettingsDimension.paddingLarge),
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.lineage_mark_tight),
+                        painter = painterResource(R.drawable.aicp_logo),
                         contentDescription = stringResource(R.string.brand_name),
                         modifier = Modifier
                             .width(markWidth)
@@ -274,7 +274,6 @@ fun UpdaterCard(
                         .fillMaxWidth()
                         .padding(
                             horizontal = SettingsDimension.paddingLarge,
-                            vertical = SettingsDimension.paddingLarge,
                         ),
                     horizontalArrangement = Arrangement.spacedBy(SettingsDimension.paddingLarge),
                 ) {
@@ -349,7 +348,7 @@ private fun InfoColumn(
 private fun UpdaterCardPreview() {
     SettingsTheme {
         UpdaterCard(
-            buildVersion = "23.2",
+            buildVersion = "21.2",
             androidVersion = "16",
             buildDate = "Feb 20",
             securityPatch = "Feb 2026",
