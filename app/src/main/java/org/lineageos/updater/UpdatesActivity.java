@@ -273,11 +273,11 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
         } else if (itemId == R.id.menu_preferences) {
             showPreferencesDialog();
             return true;
-        /*} else if (itemId == R.id.menu_show_changelog) {
+        } else if (itemId == R.id.menu_show_changelog) {
             Intent openUrl = new Intent(Intent.ACTION_VIEW,
                     Uri.parse(Utils.getChangelogURL(this)));
             startActivity(openUrl);
-            return true;*/
+            return true;
         } else if (itemId == R.id.menu_local_update) {
             mUpdateImporter.openImportPicker();
             return true;
