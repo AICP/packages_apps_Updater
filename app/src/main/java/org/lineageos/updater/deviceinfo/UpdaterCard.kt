@@ -248,7 +248,7 @@ fun UpdaterCard(
                         .padding(SettingsDimension.paddingLarge),
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.lineage_mark_tight),
+                        painter = painterResource(R.drawable.aicp_logo),
                         contentDescription = stringResource(R.string.brand_name),
                         modifier = Modifier
                             .width(markWidth)
@@ -349,7 +349,7 @@ private fun InfoColumn(
 private fun UpdaterCardPreview() {
     SettingsTheme {
         UpdaterCard(
-            buildVersion = "23.2",
+            buildVersion = "21.2",
             androidVersion = "16",
             buildDate = "Feb 20",
             securityPatch = "Feb 2026",
