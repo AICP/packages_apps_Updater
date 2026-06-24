@@ -170,7 +170,7 @@ class UpdateItemStateMapper(
             isLocal = state.isFullyDownloaded,
             buildDate = StringUtil.formatBuildDate(context, update.timestamp),
             buildVersion = context.getString(
-                R.string.list_build_version,
+                R.string.list_aicp_version,
                 update.version,
             ),
             status = state.titleRes?.let { context.getString(it) } ?: "",
