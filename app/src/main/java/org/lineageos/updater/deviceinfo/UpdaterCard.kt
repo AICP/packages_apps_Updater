@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
@@ -49,7 +50,7 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 // Brand guide: "Mark height based on text x-height". Approximate Roboto x-height from font size.
-private const val MARK_X_HEIGHT_RATIO = 0.55f
+private const val MARK_X_HEIGHT_RATIO = 1.5f
 
 // Brand guide: "Do not warp, transform". Derive width from height to keep logo proportions.
 private const val MARK_WIDTH_MULTIPLIER = 2.5f
@@ -199,10 +200,10 @@ fun UpdaterCard(
     modifier: Modifier = Modifier,
     shape: Shape = CornerExtraLarge1,
 ) {
-    val brandColor = colorResource(R.color.brand_primary)
-    val onBrandColor = colorResource(R.color.on_brand_surface)
-    val patternColor = colorResource(R.color.brand_pattern)
-    val sheenColor = colorResource(R.color.brand_sheen)
+    val brandColor = Color(0xffa000)
+    val onBrandColor = Color(0xffab00)
+    val patternColor = Color(0xcddc39)
+    val sheenColor = Color(0x673ab7)
 
     val density = LocalDensity.current
     val displayLarge = MaterialTheme.typography.displayLarge
@@ -242,18 +243,20 @@ fun UpdaterCard(
                 ),
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(SettingsDimension.paddingLarge),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.lineage_mark_tight),
+                        painter = painterResource(R.drawable.aicp_logo),
                         contentDescription = stringResource(R.string.brand_name),
                         modifier = Modifier
                             .width(markWidth)
-                            .alignBy { it.measuredHeight },
-                        contentScale = ContentScale.FillWidth,
+                            .height(markHeight),
+                        contentScale = ContentScale.Fit,
                         // Brand guide: "Use white when on dark backgrounds".
                         colorFilter = ColorFilter.tint(onBrandColor),
                     )
@@ -263,7 +266,6 @@ fun UpdaterCard(
                     Text(
                         text = buildVersion,
                         style = versionStyle,
-                        modifier = Modifier.alignByBaseline(),
                     )
                 }
 
@@ -349,7 +351,7 @@ private fun InfoColumn(
 private fun UpdaterCardPreview() {
     SettingsTheme {
         UpdaterCard(
-            buildVersion = "23.2",
+            buildVersion = "21.2",
             androidVersion = "16",
             buildDate = "Feb 20",
             securityPatch = "Feb 2026",
