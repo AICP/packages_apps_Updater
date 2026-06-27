@@ -14,7 +14,7 @@ object DeviceInfoUtils : SettingsLibDeviceInfoUtils() {
     private const val PROP_AB_DEVICE = "ro.build.ab_update"
     private const val PROP_ALLOW_MAJOR_UPGRADES = "lineage.updater.allow_major_upgrades"
     private const val PROP_BUILD_DATE = "ro.build.date.utc"
-    private const val PROP_BUILD_VERSION = "ro.lineage.build.version"
+    private const val PROP_BUILD_VERSION = "ro.aicp.version.update"
     private const val PROP_BUILD_VERSION_INCREMENTAL = "ro.build.version.incremental"
     private const val PROP_DEVICE = "ro.lineage.device"
     private const val PROP_NEXT_DEVICE = "ro.updater.next_device"
