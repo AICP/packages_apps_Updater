@@ -94,8 +94,7 @@ fun UpdatesCheck(
         when (uiState.displayedState) {
             UpdatesCheckState.Idle -> Unit
             UpdatesCheckState.Checking -> StatusContent(
-                R.raw.sysupdater_progress,
-                R.string.checking_for_updates,
+                R.drawable.ic_empty_recents,
             )
 
             UpdatesCheckState.NoInternet -> StatusContent(
