@@ -239,7 +239,7 @@ class UpdateActionHandler(
             update.timestamp,
         )
         val buildInfoText = activity.getString(
-            R.string.list_build_version_date,
+            R.string.list_aicp_version_date,
             update.version,
             buildDate,
         )
