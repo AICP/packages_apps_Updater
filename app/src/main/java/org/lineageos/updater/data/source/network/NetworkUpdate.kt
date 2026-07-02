@@ -14,6 +14,9 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.lineageos.updater.data.Update
 import org.lineageos.updater.misc.Constants
 
+// Commented out fields below are available in production, but not needed in runtime.
+// If you wish to uncomment any of them, please update the README.md to indicate that.
+
 @Suppress("PROVIDED_RUNTIME_TOO_LOW")
 @Serializable
 @JsonIgnoreUnknownKeys
@@ -21,9 +24,6 @@ data class NetworkUpdate(
     // @SerialName("date") val date: String,
     @SerialName("datetime") val datetime: Long,
     @SerialName("files") val files: List<NetworkUpdateFile>,
-    @SerialName("os_patch_level") val osPatchLevel: String? = null,
-    @SerialName("os_sdk_level") val osSdkLevel: Int? = null,
-    // @SerialName("ota_property_files") val otaPropertyFiles: String? = null,
     @SerialName("type") val type: String,
     @SerialName("version") val version: String,
 )
@@ -75,8 +75,8 @@ fun NetworkUpdate.toUpdate(): Update {
         fileSize = file.size,
         downloadUrl = file.url,
         version = version,
-        osPatchLevel = osPatchLevel ?: file.osPatchLevel,
-        osSdkLevel = osSdkLevel ?: file.osSdkLevel,
+        osPatchLevel = file.osPatchLevel,
+        osSdkLevel = file.osSdkLevel,
         payloadMetadataOffset = payloadMetadataRange?.offset,
         payloadMetadataSize = payloadMetadataRange?.size,
         payloadOffset = payloadRange?.offset,
