@@ -41,18 +41,13 @@ public class Utils {
 
     public static boolean compareVersions(String a, String b, boolean allowMajorUpgrades) {
         try {
-            a = a.replaceAll("[^0-9.]", "");
-            b = b.replaceAll("[^0-9.]", "");
+            int majorA = Integer.parseInt(a.split("\\.")[0]);
+            int minorA = Integer.parseInt(a.split("\\.")[1]);
 
-            String[] partsA = a.split("\\.");
-            String[] partsB = b.split("\\.");
+            int majorB = Integer.parseInt(b.split("\\.")[0]);
+            int minorB = Integer.parseInt(b.split("\\.")[1]);
 
-            int majorA = Integer.parseInt(partsA[0]);
-            int minorA = partsA.length > 1 ? Integer.parseInt(partsA[1]) : 0;
-
-            int majorB = Integer.parseInt(partsB[0]);
-            int minorB = partsB.length > 1 ? Integer.parseInt(partsB[1]) : 0;
-
+            // Return early and allow if we allow major version upgrades
             return (allowMajorUpgrades && majorA > majorB)
                     || (majorA == majorB && minorA >= minorB);
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
