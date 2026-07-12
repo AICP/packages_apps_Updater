@@ -21,7 +21,6 @@ import org.lineageos.updater.data.source.local.UpdatesDatabase;
 import org.lineageos.updater.deviceinfo.DeviceInfoUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -37,22 +36,6 @@ public class Utils {
 
     public static File getDownloadPath(Context context) {
         return new File(context.getString(R.string.download_path));
-    }
-
-    public static boolean compareVersions(String a, String b, boolean allowMajorUpgrades) {
-        try {
-            int majorA = Integer.parseInt(a.split("\\.")[0]);
-            int minorA = Integer.parseInt(a.split("\\.")[1]);
-
-            int majorB = Integer.parseInt(b.split("\\.")[0]);
-            int minorB = Integer.parseInt(b.split("\\.")[1]);
-
-            // Return early and allow if we allow major version upgrades
-            return (allowMajorUpgrades && majorA > majorB)
-                    || (majorA == majorB && minorA >= minorB);
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            return false;
-        }
     }
 
     public static void triggerUpdate(Context context, String downloadId) {
@@ -184,18 +167,6 @@ public class Utils {
             }
         }
         throw new IllegalStateException();
-    }
-
-    public static boolean isABUpdate(ZipFile zipFile) {
-        return zipFile.getEntry(Constants.AB_PAYLOAD_BIN_PATH) != null &&
-                zipFile.getEntry(Constants.AB_PAYLOAD_PROPERTIES_PATH) != null;
-    }
-
-    public static boolean isABUpdate(File file) throws IOException {
-        ZipFile zipFile = new ZipFile(file);
-        boolean isAB = isABUpdate(zipFile);
-        zipFile.close();
-        return isAB;
     }
 
     public static boolean isEncrypted(Context context, File file) {

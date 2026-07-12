@@ -12,6 +12,7 @@ import org.lineageos.updater.R
 import org.lineageos.updater.controller.UpdaterController
 import org.lineageos.updater.data.Update
 import org.lineageos.updater.data.UpdateStatus
+import org.lineageos.updater.deviceinfo.DeviceInfoUtils
 import org.lineageos.updater.updates.action.UpdateAction
 import org.lineageos.updater.updates.action.UpdateActionType
 import org.lineageos.updater.updates.action.UpdateActions
@@ -85,6 +86,10 @@ class UpdateItemStateMapper(
 
             UpdateOperationPhase.VERIFIED -> ActionButtons(
                 primary = when {
+                    state.requiresManualInstall -> action(
+                        type = UpdateActionType.OPEN_GUIDE,
+                    )
+
                     state.canInstall -> action(
                         type = UpdateActionType.START_INSTALL,
                         enabled = !state.isBusy,
@@ -123,6 +128,10 @@ class UpdateItemStateMapper(
 
             else -> ActionButtons(
                 primary = when {
+                    state.requiresManualInstall -> action(
+                        type = UpdateActionType.OPEN_GUIDE,
+                    )
+
                     !state.canInstall -> action(
                         type = UpdateActionType.SHOW_INFO,
                         enabled = !state.isBusy,
@@ -167,10 +176,9 @@ class UpdateItemStateMapper(
             status = state.titleRes?.let { context.getString(it) } ?: "",
             fileSize = Formatter.formatShortFileSize(context, update.fileSize),
             androidUpdateInfo = when {
-                update.osSdkLevel == null -> ""
-                update.osSdkLevel > Build.VERSION.SDK_INT ->
+                update.osSdkLevel > DeviceInfoUtils.sdkLevel ->
                     context.getString(R.string.list_major_android_upgrade)
-                update.osSdkLevel == Build.VERSION.SDK_INT ->
+                update.osSdkLevel == DeviceInfoUtils.sdkLevel ->
                     context.getString(
                         R.string.header_android_version,
                         Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY,
@@ -180,6 +188,11 @@ class UpdateItemStateMapper(
             securityUpdate = update.osPatchLevel?.let {
                 StringUtil.formatSecurityPatch(context, it)
             } ?: "",
+            installNote = when (state.installBlockedReason) {
+                InstallUtils.BlockedReason.DOWNGRADE -> R.string.list_downgrade_blocked
+                InstallUtils.BlockedReason.VERSION_UNSUPPORTED -> R.string.list_major_upgrade_recovery_install
+                InstallUtils.BlockedReason.NONE -> R.string.list_full_install
+            },
             progress = progress,
             actions = actions,
         )
