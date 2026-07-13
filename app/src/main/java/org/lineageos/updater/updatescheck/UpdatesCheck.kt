@@ -9,6 +9,9 @@ import android.content.Context
 import android.os.SystemClock
 import android.text.format.DateFormat
 import android.text.format.DateUtils
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +38,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.airbnb.lottie.compose.LottieConstants
 import com.android.settingslib.spa.framework.theme.SettingsDimension
 import com.android.settingslib.spa.widget.ui.SettingsBody
@@ -93,8 +97,8 @@ fun UpdatesCheck(
     ) {
         when (uiState.displayedState) {
             UpdatesCheckState.Idle -> Unit
-            UpdatesCheckState.Checking -> StatusContent(
-                R.raw.sysupdater_progress,
+            UpdatesCheckState.Checking -> StatusContentAnimatedVector(
+                R.drawable.ic_empty_recents,
                 R.string.checking_for_updates,
             )
 
@@ -228,4 +232,35 @@ private fun formatLastCheckedText(
     )
 
     return context.getString(R.string.header_last_updates_check, date, time)
+}
+
+/**
+ * Show aicp animation
+ */
+@Composable
+private fun StatusContentAnimatedVector(
+    @DrawableRes drawableResId: Int,
+    @StringRes textResId: Int,
+) {
+    val text = stringResource(textResId)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(SettingsDimension.itemPaddingVertical),
+    ) {
+        AndroidView(
+            modifier = Modifier
+                .size(AnimationSize)
+                .semantics { contentDescription = text },
+            factory = { context ->
+                ImageView(context).apply {
+                    setImageResource(drawableResId)
+                    val imgDrawable = drawable
+                    if (imgDrawable is AnimatedVectorDrawable) {
+                        imgDrawable.start()
+                    }
+                }
+            }
+        )
+        SettingsBody(text)
+    }
 }
