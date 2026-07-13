@@ -49,10 +49,10 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 // Brand guide: "Mark height based on text x-height". Approximate Roboto x-height from font size.
-private const val MARK_X_HEIGHT_RATIO = 0.55f
+private const val MARK_X_HEIGHT_RATIO = 1.55f
 
 // Brand guide: "Do not warp, transform". Derive width from height to keep logo proportions.
-private const val MARK_WIDTH_MULTIPLIER = 2.5f
+private const val MARK_WIDTH_MULTIPLIER = 4.5f
 
 // Brand guide: "higher numbers' lower edges". Scale the gap from the mark, not a fixed dp.
 private const val VERSION_MARK_SPACING_RATIO = 0.10f
@@ -199,7 +199,7 @@ fun UpdaterCard(
     modifier: Modifier = Modifier,
     shape: Shape = CornerExtraLarge1,
 ) {
-    val brandColor = colorResource(R.color.brand_primary)
+    val brandColor = Color(0x90ffa000)
     val onBrandColor = colorResource(R.color.on_brand_surface)
     val patternColor = colorResource(R.color.brand_pattern)
     val sheenColor = colorResource(R.color.brand_sheen)
@@ -248,7 +248,7 @@ fun UpdaterCard(
                         .padding(SettingsDimension.paddingLarge),
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.lineage_mark_tight),
+                        painter = painterResource(R.drawable.aicp_logo),
                         contentDescription = stringResource(R.string.brand_name),
                         modifier = Modifier
                             .width(markWidth)
