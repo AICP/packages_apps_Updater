@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: The LineageOS Project
  * SPDX-License-Identifier: Apache-2.0
  */
-
+/*
 package org.lineageos.updater.deviceinfo.actions
 
 import android.content.Intent
@@ -81,4 +81,4 @@ private fun DeviceInfoActionButtonsPreview() {
             modifier = Modifier.padding(SettingsDimension.itemPadding),
         )
     }
-}
+}*/
