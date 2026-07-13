@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d14c9444_d0f23305",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2026-07-13T14:13:13Z",
+      "side": 1,
+      "message": "But remember we have our own changelog, so it should display it... Getting rid of the issue tracker from lineage is okay. I am currently thinking of commenting the ota update out of AICP Extras. We have an update link in settings from lineage now. 😬🙈",
+      "revId": "5ce0fe1ca5dafaf0f9ee2f63f177428fbd74e19f",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
+    }
+  ]
+}
