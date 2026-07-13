@@ -34,6 +34,7 @@ import org.lineageos.updater.deviceinfo.DeviceInfoUtils
 fun DeviceInfoActionButtons(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
+/*
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -70,7 +71,7 @@ fun DeviceInfoActionButtons(modifier: Modifier = Modifier) {
         ) {
             Text(text = stringResource(R.string.report_issues))
         }
-    }
+    } */
 }
 
 @UiModePreviews
