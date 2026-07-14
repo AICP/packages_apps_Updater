@@ -91,7 +91,7 @@
     <string name="menu_stream_updates_summary">Install updates while downloading. Disable to save update packages for export.</string>
     <string name="menu_delete_update">Delete</string>
     <string name="menu_export_update">Export update</string>
-    <string name="menu_changelog_url" translatable="false">https://download.lineageos.org/<xliff:g id="device_name">%1$s</xliff:g>/changes</string>
+    <string name="menu_changelog_url" translatable="false">https://dwnld.aicp-rom.com/device/<xliff:g id="device_name">%1$s</xliff:g>/WEEKLY/<xliff:g id="AICP_VERSION">%2$s</xliff:g>.zip.html</string>
     <string name="menu_view_downloads">View on <xliff:g id="brand_name" example="LineageOS">%1$s</xliff:g> Downloads</string>
     <string name="menu_metered_network_warning">Metered network warning</string>
     <string name="menu_metered_network_warning_summary">Warn before downloading over mobile data</string>
@@ -118,7 +118,7 @@
     <string name="security_update">Security update</string>
     <string name="show_changelog">Recent changes</string>
     <string name="report_issues">Report issues</string>
-    <string name="report_issue_url" translatable="false">https://wiki.lineageos.org/how-to/bugreport/</string>
+    <string name="report_issue_url" translatable="false">https://discord.gg/nMQUVRD</string>
     <string name="header_review_updates">Review updates and recent changes on</string>
     <string name="header_download_url" translatable="false">https://dwnld.aicp-rom.com</string>
     <string name="found_bug">Found a bug? Report it with our bug report guide:</string>
