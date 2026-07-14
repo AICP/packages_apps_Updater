@@ -6,6 +6,7 @@
 package org.lineageos.updater.deviceinfo.actions
 
 import android.content.Intent
+import android.os.SystemProperties
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,7 @@ fun DeviceInfoActionButtons(modifier: Modifier = Modifier) {
         )
         TextButton(
             onClick = {
-                val url = context.getString(R.string.menu_changelog_url, DeviceInfoUtils.device)
+                val url = context.getString(R.string.menu_changelog_url, DeviceInfoUtils.device, SystemProperties.get("ro.aicp.version")
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                 context.startActivity(intent)
             },
