@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "979e7a76_2e6ecdf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 774
+      },
+      "writtenOn": "2026-07-21T20:53:44Z",
+      "side": 1,
+      "message": "Now it\u0027s really ready",
+      "revId": "6aaa58c66ea83d742b31780877e58f80c8627dc3",
+      "serverId": "9f904cbb-a964-4fab-a7dc-5cfc4d5c238b"
+    }
+  ]
+}
