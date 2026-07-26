@@ -25,10 +25,10 @@ object InstallUtils {
     fun getBlockedReason(update: Update) = when {
         !DeviceInfoUtils.isDowngradingAllowed &&
                 (update.timestamp < DeviceInfoUtils.buildDateTimestamp ||
-                        update.osSdkLevel < DeviceInfoUtils.sdkLevel) -> BlockedReason.DOWNGRADE
+                        !update.osSdkLevel.equals(0) && update.osSdkLevel < DeviceInfoUtils.sdkLevel) -> BlockedReason.DOWNGRADE
 
         !DeviceInfoUtils.isMajorUpdateAllowed &&
-                update.osSdkLevel > DeviceInfoUtils.sdkLevel -> BlockedReason.VERSION_UNSUPPORTED
+                !update.osSdkLevel.equals(0) && update.osSdkLevel > DeviceInfoUtils.sdkLevel -> BlockedReason.VERSION_UNSUPPORTED
 
         else -> BlockedReason.NONE
     }
