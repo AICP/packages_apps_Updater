@@ -21,7 +21,6 @@ import org.lineageos.updater.data.source.local.UpdatesDatabase;
 import org.lineageos.updater.deviceinfo.DeviceInfoUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -37,27 +36,6 @@ public class Utils {
 
     public static File getDownloadPath(Context context) {
         return new File(context.getString(R.string.download_path));
-    }
-
-    public static boolean compareVersions(String a, String b, boolean allowMajorUpgrades) {
-        try {
-            a = a.replaceAll("[^0-9.]", "");
-            b = b.replaceAll("[^0-9.]", "");
-
-            String[] partsA = a.split("\\.");
-            String[] partsB = b.split("\\.");
-
-            int majorA = Integer.parseInt(partsA[0]);
-            int minorA = partsA.length > 1 ? Integer.parseInt(partsA[1]) : 0;
-
-            int majorB = Integer.parseInt(partsB[0]);
-            int minorB = partsB.length > 1 ? Integer.parseInt(partsB[1]) : 0;
-
-            return (allowMajorUpgrades && majorA > majorB)
-                    || (majorA == majorB && minorA >= minorB);
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            return false;
-        }
     }
 
     public static void triggerUpdate(Context context, String downloadId) {
@@ -189,18 +167,6 @@ public class Utils {
             }
         }
         throw new IllegalStateException();
-    }
-
-    public static boolean isABUpdate(ZipFile zipFile) {
-        return zipFile.getEntry(Constants.AB_PAYLOAD_BIN_PATH) != null &&
-                zipFile.getEntry(Constants.AB_PAYLOAD_PROPERTIES_PATH) != null;
-    }
-
-    public static boolean isABUpdate(File file) throws IOException {
-        ZipFile zipFile = new ZipFile(file);
-        boolean isAB = isABUpdate(zipFile);
-        zipFile.close();
-        return isAB;
     }
 
     public static boolean isEncrypted(Context context, File file) {

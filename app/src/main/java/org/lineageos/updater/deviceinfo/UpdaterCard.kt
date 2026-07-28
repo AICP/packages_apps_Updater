@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
@@ -50,10 +49,10 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 // Brand guide: "Mark height based on text x-height". Approximate Roboto x-height from font size.
-private const val MARK_X_HEIGHT_RATIO = 10.55f
+private const val MARK_X_HEIGHT_RATIO = 2.55f
 
 // Brand guide: "Do not warp, transform". Derive width from height to keep logo proportions.
-private const val MARK_WIDTH_MULTIPLIER = 12.5f
+private const val MARK_WIDTH_MULTIPLIER = 4.5f
 
 // Brand guide: "higher numbers' lower edges". Scale the gap from the mark, not a fixed dp.
 private const val VERSION_MARK_SPACING_RATIO = 0.10f
@@ -261,11 +260,13 @@ fun UpdaterCard(
 
                     Spacer(modifier = Modifier.width(markWidth * VERSION_MARK_SPACING_RATIO))
 
+/*
                     Text(
                         text = buildVersion,
                         style = versionStyle,
                         modifier = Modifier.alignByBaseline(),
                     )
+*/
                 }
 
                 Spacer(modifier = Modifier.height(SettingsSpace.medium5))
@@ -358,4 +359,3 @@ private fun UpdaterCardPreview() {
         )
     }
 }
-
